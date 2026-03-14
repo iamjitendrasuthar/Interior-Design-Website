@@ -13,7 +13,10 @@ const staggerContainer = {
 };
 export default function Hero() {
   return (
-    <section className="max-w-7xl mx-auto px-6 flex flex-col items-center text-center mt-12 mb-24">
+    <section
+      className="max-w-7xl mx-auto px-6 flex flex-col items-center text-center mt-12 mb-24"
+      style={{ marginTop: "120px" }}
+    >
       <motion.h1
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
