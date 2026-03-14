@@ -76,7 +76,7 @@ export default function Portfolio() {
         variants={staggerContainer}
         initial="hidden"
         animate="visible"
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+        className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-8"
       >
         {projects.map((project, i) => (
           <Link key={project.id} href={`/portfolio/${project.id}`}>
@@ -104,10 +104,14 @@ export default function Portfolio() {
         ))}
       </motion.div>
 
-      <div className="mt-16 text-center">
+      <div className="mt-20 text-center">
         <Link href="/contact">
           <button className="bg-[#132A13] text-white px-8 py-4 rounded-full font-medium inline-flex items-center gap-2 hover:bg-[#1a381a] transition-colors">
-            Start your project <ArrowRight size={18} />
+            <span>Start your project</span>
+            <ArrowRight
+              size={20}
+              className="inline-block -translate-y-0.5"
+            />{" "}
           </button>
         </Link>
       </div>
