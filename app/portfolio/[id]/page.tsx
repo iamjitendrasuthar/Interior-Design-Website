@@ -2,6 +2,7 @@
 import { use, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   ArrowLeft,
   CheckCircle2,
@@ -68,7 +69,7 @@ export default function ProjectDetail({ params }) {
   const [activeIndex, setActiveIndex] = useState(null);
   const resolvedParams = use(params);
   const project = projectDetails[resolvedParams?.id] || projectDetails.default;
-
+  const router = useRouter();
   const handleNext = (e) => {
     e.stopPropagation();
     setActiveIndex((prev) =>
@@ -87,14 +88,14 @@ export default function ProjectDetail({ params }) {
     <div className="w-full pt-32 pb-24">
       <div className="max-w-7xl mx-auto px-6">
         {/* Back Button */}
-        <Link
-          href="/portfolio"
+        <button
+          onClick={() => router.back()}
           className="inline-flex items-center gap-2 text-gray-500 hover:text-[#132A13] font-medium mb-8 transition-colors"
         >
           <ArrowLeft size={20} /> Back
-        </Link>
+        </button>
 
-        {/* Project Header */} 
+        {/* Project Header */}
         <div className="mb-12">
           <span className="px-4 py-1.5 rounded-full bg-gray-100 text-sm font-medium text-gray-700 mb-4 inline-block">
             {project.category}
