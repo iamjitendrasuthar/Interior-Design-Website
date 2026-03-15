@@ -88,7 +88,7 @@ export default function Contact() {
               <label className="block text-sm mb-2 opacity-80">Name</label>
               <input
                 type="text"
-                name="user_name"
+                name="name"
                 required
                 placeholder="Your Name"
                 className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/50 transition-colors"
@@ -99,7 +99,7 @@ export default function Contact() {
               <label className="block text-sm mb-2 opacity-80">Email</label>
               <input
                 type="email"
-                name="user_email"
+                name="email"
                 required
                 placeholder="your@email.com"
                 className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/50 transition-colors"
