@@ -31,7 +31,10 @@ export default function CTASection() {
 
   return (
     <section className="max-w-7xl mx-auto px-6 py-20 mb-12">
-      <div className="bg-[#f8f9f8] rounded-[3rem] flex flex-col md:flex-row items-center justify-between gap-12 overflow-hidden relative" style={{zIndex:"-2"}}>
+      <div
+        className="bg-[#f8f9f8] rounded-[3rem] flex flex-col md:flex-row items-center justify-between gap-12 overflow-hidden relative"
+        style={{ zIndex: "-2" }}
+      >
         {/* Left Content */}
         <div className="md:w-1/2 z-10 p-8 md:p-16">
           <h2 className="text-4xl md:text-6xl font-semibold tracking-tight text-[#132A13] mb-6">
@@ -45,9 +48,14 @@ export default function CTASection() {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="bg-[#132A13] text-white px-8 py-4 rounded-full font-medium flex items-center gap-2 hover:bg-[#1a381a] transition-colors shadow-lg"
+              className="bg-[#132A13] text-white px-6 md:px-8 py-3 md:py-4 
+               rounded-full font-medium 
+               inline-flex items-center justify-center gap-2
+               whitespace-nowrap
+               hover:bg-[#1a381a] transition-colors shadow-lg"
             >
-              Let’s design your dream space <ArrowRight size={18} />
+              <span>Let’s design your dream space</span>
+              <ArrowRight size={18} />
             </motion.button>
           </Link>
         </div>

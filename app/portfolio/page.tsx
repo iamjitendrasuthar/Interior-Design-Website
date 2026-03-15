@@ -103,16 +103,12 @@ export default function Portfolio() {
           </Link>
         ))}
       </motion.div>
-
-      <div className="mt-20 text-center">
+      <div className="mt-20 flex justify-center">
         <Link href="/contact">
-          <button className="bg-[#132A13] text-white px-8 py-4 rounded-full font-medium inline-flex items-center gap-2 hover:bg-[#1a381a] transition-colors">
-            <span>Start your project</span>
-            <ArrowRight
-              size={20}
-              className="inline-block -translate-y-0.5"
-            />{" "}
-          </button>
+          <div className="bg-[#132A13] text-white px-8 py-4 rounded-full font-medium flex items-center gap-3 hover:bg-[#1a381a] transition-colors">
+            <span className="whitespace-nowrap">Start your project</span>
+            <ArrowRight size={20} />
+          </div>
         </Link>
       </div>
     </div>
