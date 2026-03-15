@@ -105,6 +105,18 @@ export default function Contact() {
                 className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/50 transition-colors"
               />
             </div>
+            <div>
+              <label className="block text-sm mb-2 opacity-80">
+                Phone Number
+              </label>
+              <input
+                type="tel"
+                name="phone"
+                required
+                placeholder="+91 98765 43210"
+                className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/50 transition-colors"
+              />
+            </div>
 
             <div>
               <label className="block text-sm mb-2 opacity-80">Message</label>
