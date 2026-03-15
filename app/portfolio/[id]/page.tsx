@@ -94,7 +94,7 @@ export default function ProjectDetail({ params }) {
           <ArrowLeft size={20} /> Back
         </Link>
 
-        {/* Project Header */}
+        {/* Project Header */} 
         <div className="mb-12">
           <span className="px-4 py-1.5 rounded-full bg-gray-100 text-sm font-medium text-gray-700 mb-4 inline-block">
             {project.category}
