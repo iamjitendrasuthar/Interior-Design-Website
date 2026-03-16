@@ -25,7 +25,8 @@ const WhatsAppWidget = () => {
       {" "}
       {/* Chat Window */}
       {isOpen && (
-        <div className="mb-4 w-72 bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-100 transition-all animate-in fade-in slide-in-from-bottom-4">
+        <div className="mb-4 w-72 bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-100">
+          {" "}
           {/* Header */}
           <div className="bg-[#132A13] p-4 text-white">
             <h3 className="font-bold text-lg">Js Interiors</h3>
@@ -33,7 +34,6 @@ const WhatsAppWidget = () => {
               Typically replies within an hour
             </p>
           </div>
-
           {/* Body */}
           <div className="p-4 bg-gray-50">
             <div className="bg-white p-3 rounded-lg shadow-sm text-sm text-gray-700 mb-4">
