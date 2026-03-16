@@ -15,16 +15,14 @@ export default function Testimonials() {
     if (!slider) return;
 
     const autoScroll = setInterval(() => {
-      const cardWidth = slider.firstChild?.clientWidth || 0;
-      const gap = 24; // gap-6 = 24px
-      const scrollStep = cardWidth + gap;
+      const cardWidth = slider.offsetWidth;
 
       if (slider.scrollLeft + slider.clientWidth >= slider.scrollWidth - 5) {
         slider.scrollTo({ left: 0, behavior: "smooth" });
       } else {
-        slider.scrollBy({ left: scrollStep, behavior: "smooth" });
+        slider.scrollBy({ left: cardWidth, behavior: "smooth" });
       }
-    }, 3000); // speed control (3 sec)
+    }, 3000);
 
     return () => clearInterval(autoScroll);
   }, []);
@@ -83,7 +81,7 @@ export default function Testimonials() {
       </div>
 
       <div className="relative">
-        {/* Navigation Arrow - Left */}
+        {/* Navigation Arrow - Left (Desktop only typically) */}
         <button
           onClick={() => scroll("left")}
           className="absolute left-2 lg:-left-6 top-1/2 -translate-y-1/2 z-10 p-4 rounded-full bg-white shadow-lg border border-gray-100 hover:bg-gray-50 transition-all text-gray-800 flex items-center justify-center opacity-0 group-hover:opacity-100 focus:opacity-100 disabled:opacity-50"
@@ -92,15 +90,15 @@ export default function Testimonials() {
           <ArrowLeft size={24} />
         </button>
 
-        {/* Slider Container */}
+        {/* Updated Slider Container */}
         <div
           ref={scrollRef}
-          className="flex gap-6 overflow-x-auto snap-x snap-mandatory pb-8 pt-4 px-4 -mx-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+          className="flex gap-6 overflow-x-auto snap-x snap-mandatory pb-8 pt-4 px-6 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
         >
           {testimonials.map((item, i) => (
             <div
               key={i}
-              className="min-w-[100%] sm:min-w-[calc(50%-12px)] lg:min-w-[calc(33.333%-16px)] snap-start bg-[#f6f7f6] p-8 md:p-10 rounded-2xl flex flex-col justify-between transition-transform"
+              className="min-w-full sm:min-w-[calc(50%-12px)] lg:min-w-[calc(33.333%-16px)] snap-center bg-[#f6f7f6] p-8 md:p-10 rounded-2xl flex flex-col justify-between transition-transform"
             >
               <div>
                 <div className="flex gap-1 mb-6 text-[#132A13]">
@@ -124,7 +122,7 @@ export default function Testimonials() {
                   alt={item.name}
                   className="w-12 h-12 rounded-full object-cover shadow-sm grayscale hover:grayscale-0 transition-all duration-300"
                 />
-                <div>
+                <div className="text-left">
                   <h4 className="font-semibold text-lg text-[#132A13]">
                     {item.name}
                   </h4>
