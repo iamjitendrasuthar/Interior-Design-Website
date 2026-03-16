@@ -33,7 +33,6 @@ export default function CTASection() {
     <section className="max-w-7xl mx-auto px-6 py-20 mb-12">
       <div
         className="bg-[#f8f9f8] rounded-[3rem] flex flex-col md:flex-row items-center justify-between gap-12 overflow-hidden relative"
-        style={{ zIndex: "-2" }}
       >
         {/* Left Content */}
         <div className="md:w-1/2 z-10 p-8 md:p-16">

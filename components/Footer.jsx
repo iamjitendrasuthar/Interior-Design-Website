@@ -51,7 +51,7 @@ export default function Footer() {
             </div>
           </div>
 
-          <div style={{ zIndex: "0" }}>
+          <div>
             <h4 className="font-medium mb-6 text-lg">Pages</h4>
             <ul className="flex flex-col gap-3 opacity-70">
               <li>
@@ -86,7 +86,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          <div style={{ zIndex: "0" }}>
+          <div>
             <h4 className="font-medium mb-6 text-lg">Information</h4>
             <ul className="flex flex-col gap-3 opacity-70">
               <li>
