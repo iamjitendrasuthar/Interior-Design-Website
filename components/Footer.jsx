@@ -1,11 +1,20 @@
 import Link from "next/link";
-import { Facebook, Instagram, Youtube, Linkedin } from "lucide-react";
+import {
+  Facebook,
+  Instagram,
+  Youtube,
+  Linkedin,
+  Phone,
+  Mail,
+  MapPin,
+} from "lucide-react";
 
 export default function Footer() {
   return (
     <footer className="bg-[#0f281e] text-white pt-10 pb-6">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+        {/* Adjusted grid to grid-cols-5 for the new column */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-12">
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center gap-2 mb-6">
               <div className="w-5 h-5 rounded-full bg-white"></div>
@@ -106,6 +115,35 @@ export default function Footer() {
                 <Link href="#" className="hover:text-white transition-colors">
                   Terms
                 </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* New Contact Us Column */}
+          <div>
+            <h4 className="font-medium mb-6 text-lg">Contact Us</h4>
+            <ul className="flex flex-col gap-4 opacity-70">
+              <li className="flex items-start gap-3">
+                <MapPin size={20} className="shrink-0 text-white" />
+                <span>123 Design St, Interior City, State 45678</span>
+              </li>
+              <li className="flex items-center gap-3">
+                <Phone size={20} className="shrink-0 text-white" />
+                <a
+                  href="tel:+1234567890"
+                  className="hover:text-white transition-colors"
+                >
+                  +1 (234) 567-890
+                </a>
+              </li>
+              <li className="flex items-center gap-3">
+                <Mail size={20} className="shrink-0 text-white" />
+                <a
+                  href="mailto:info@jsinterior.com"
+                  className="hover:text-white transition-colors"
+                >
+                  info@jsinterior.com
+                </a>
               </li>
             </ul>
           </div>
