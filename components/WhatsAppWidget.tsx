@@ -1,11 +1,12 @@
 "use client";
 import React, { useState } from "react";
-import { MessageCircle, X } from "lucide-react";
+import { MessageCircle, X, Send } from "lucide-react";
+
 const WhatsAppWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
 
-  const phoneNumber = "919521985145"; // Use your actual number with country code
+  const phoneNumber = "919521985145";
 
   const handleSendMessage = (e) => {
     e.preventDefault();
@@ -19,47 +20,47 @@ const WhatsAppWidget = () => {
 
   return (
     <div
-      className=" font-sans flex flex-col items-end z-[999]"
+      className="flex flex-col items-end z-[999]"
       style={{ position: "fixed", right: "20px", bottom: "20px" }}
     >
-      {" "}
       {/* Chat Window */}
       {isOpen && (
-        <div className="mb-4 w-72 bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-100">
-          {" "}
+        <div className="mb-4 w-80 bg-white rounded-3xl shadow-xl border border-gray-200 overflow-hidden">
           {/* Header */}
-          <div className="bg-[#132A13] p-4 text-white">
-            <h3 className="font-bold text-lg">Js Interiors</h3>
-            <p className="text-xs opacity-80">
+          <div className="bg-[#132A13] text-white p-4 rounded-t-3xl flex flex-col">
+            <h3 className="font-bold text-lg">JS Interiors</h3>
+            <span className="text-xs opacity-80 mt-1">
               Typically replies within an hour
-            </p>
+            </span>
           </div>
-          {/* Body */}
-          <div className="p-4 bg-gray-50">
-            <div className="bg-white p-3 rounded-lg shadow-sm text-sm text-gray-700 mb-4">
-              Hi there! 👋 <br /> How can we help you with your interior design
-              today?
+
+          {/* Chat Body */}
+          <div className="p-4 flex flex-col gap-3">
+            <div className="bg-gray-100 p-3 rounded-xl shadow-inner text-sm text-black">
+              👋 Hi there! How can we help you with your interior design today?
             </div>
 
-            <form onSubmit={handleSendMessage}>
+            <form onSubmit={handleSendMessage} className="flex flex-col gap-2">
               <textarea
-                className="w-full p-2 text-sm border rounded-md focus:outline-none focus:ring-1 focus:ring-[#132A13] resize-none"
+                className="w-full p-3 border border-gray-300 rounded-xl text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#132A13] resize-none"
                 placeholder="Type your message..."
                 rows="3"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
+                style={{ paddingLeft: "4px", paddingTop: "4px" }}
               />
               <button
                 type="submit"
-                className="w-full mt-2 bg-[#000] text-black py-2 rounded-md text-sm font-semibold hover:bg-[#128C7E] transition-colors"
+                className="w-full flex justify-center items-center gap-2 py-2 bg-[#132A13] text-white font-semibold rounded-xl hover:bg-[#25D366] transition-colors"
               >
-                Start Chat
+                Start Chat <Send size={16} />
               </button>
             </form>
           </div>
         </div>
       )}
-      {/* Toggle Button */}
+
+      {/* Floating Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="ml-auto block bg-white text-[#25D366] p-4 rounded-full shadow-lg hover:scale-110 transition-transform border border-gray-200"
