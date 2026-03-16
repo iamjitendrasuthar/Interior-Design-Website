@@ -95,14 +95,13 @@ export default function Testimonials() {
         {/* Slider Container */}
         <div
           ref={scrollRef}
-          className="flex gap-6 overflow-x-auto snap-x snap-mandatory pb-8 pt-4 px-4 justify-start md:justify-center [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+          className="flex gap-6 overflow-x-auto snap-x snap-mandatory pb-8 pt-4 px-4 -mx-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
         >
           {testimonials.map((item, i) => (
             <div
               key={i}
-              className="min-w-[85%] sm:min-w-[calc(50%-12px)] lg:min-w-[calc(33.333%-16px)] snap-center bg-[#f6f7f6] p-8 md:p-10 rounded-2xl flex flex-col justify-between transition-transform shadow-sm"
+              className="min-w-[100%] sm:min-w-[calc(50%-12px)] lg:min-w-[calc(33.333%-16px)] snap-start bg-[#f6f7f6] p-8 md:p-10 rounded-2xl flex flex-col justify-between transition-transform"
             >
-              {/* Card Content */}
               <div>
                 <div className="flex gap-1 mb-6 text-[#132A13]">
                   {[1, 2, 3, 4, 5].map((star) => (
@@ -125,9 +124,7 @@ export default function Testimonials() {
                   alt={item.name}
                   className="w-12 h-12 rounded-full object-cover shadow-sm grayscale hover:grayscale-0 transition-all duration-300"
                 />
-                <div className="text-left">
-                  {" "}
-                  {/* Text left align rakha hai card ke andar */}
+                <div>
                   <h4 className="font-semibold text-lg text-[#132A13]">
                     {item.name}
                   </h4>
