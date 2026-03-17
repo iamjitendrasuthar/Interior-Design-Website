@@ -19,9 +19,12 @@ export default function RootLayout({ children }) {
         style={{ position: "relative" }}
       >
         <Navbar />
-        <main className="min-h-screen">{children}</main>
+        <main className="min-h-screen">
+          {children}
+          <WhatsAppWidget />
+        </main>
+
         <Footer />
-        <WhatsAppWidget />
       </body>
     </html>
   );
