@@ -8,35 +8,40 @@ export default function Contact() {
   const formRef = useRef();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const sendEmail = (e) => {
+  const sendEmail = async (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
 
-    // Sending state ka toast
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
     const toastId = toast.loading("Sending your message...");
 
-    emailjs
-      .sendForm(
-        "service_yh5gznc",
-        "template_aa6vn4r",
-        formRef.current,
-        { publicKey: "d0D0yVwnwK4bBx3-I" }, // Object syntax
-      )
-      .then(
-        (result) => {
-          // Success hone par loading toast ko success mein badlein
-          toast.success("Message sent successfully!", { id: toastId });
-          formRef.current.reset();
-          setIsSubmitting(false);
-        },
-        (error) => {
-          // Error aane par error toast dikhayein
-          toast.error(`Failed to send: ${error.text || error.message}`, {
-            id: toastId,
-          });
-          setIsSubmitting(false);
-        },
-      );
+    const sendRequest = () =>
+      emailjs.sendForm("service_yh5gznc", "template_aa6vn4r", formRef.current, {
+        publicKey: "d0D0yVwnwK4bBx3-I",
+      });
+
+    try {
+      await sendRequest();
+
+      toast.success("Message sent successfully ✅", { id: toastId });
+      formRef.current.reset();
+    } catch (err) {
+      console.log("First attempt failed", err);
+
+      try {
+        await new Promise((res) => setTimeout(res, 2000));
+        await sendRequest();
+
+        toast.success("Message sent successfully ✅", { id: toastId });
+        formRef.current.reset();
+      } catch (error) {
+        console.log("Retry failed", error);
+        toast.error("Network issue 😢 Please try again.", { id: toastId });
+      }
+    }
+
+    setIsSubmitting(false);
   };
 
   return (
