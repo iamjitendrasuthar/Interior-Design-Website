@@ -1,6 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import CTASection from "../../components/CTA";
+import Counter from "../../components/Counter";
 
 export default function About() {
   return (
@@ -27,12 +28,15 @@ export default function About() {
             <div className="grid grid-cols-2 gap-8 pt-6 border-t border-gray-100">
               <div>
                 <div className="text-4xl font-bold text-[#132A13] mb-2">
-                  100+
+                  <Counter value={100} />+
                 </div>
                 <div className="text-sm text-gray-500">Projects Completed</div>
               </div>
               <div>
-                <div className="text-4xl font-bold text-[#132A13] mb-2">8+</div>
+                <div className="text-4xl font-bold text-[#132A13] mb-2">
+                  {" "}
+                  <Counter value={8} />+
+                </div>
                 <div className="text-sm text-gray-500">Years of Experience</div>
               </div>
             </div>
