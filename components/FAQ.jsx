@@ -1,22 +1,36 @@
 "use client";
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Minus } from "lucide-react";
+import { Plus, Minus, HelpCircle, ArrowRight } from "lucide-react"; // Naya icon add kiya
+import Link from "next/link";
 
-function FAQItem({ question, answer }) {
+function FAQItem({ question, answer, isLast }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="border-b border-gray-200 py-6">
+    <div className={`py-5 ${!isLast ? "border-b border-gray-100" : ""}`}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between text-left focus:outline-none"
+        className="w-full flex items-center justify-between text-left focus:outline-none group"
       >
-        <h3 className="text-xl font-medium text-[#132A13] pr-8">{question}</h3>
-        <span
-          className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${isOpen ? "bg-gray-100 text-gray-900" : "bg-transparent text-gray-400 hover:bg-gray-50 hover:text-gray-900"}`}
+        <h3
+          className={`text-lg font-medium transition-colors ${
+            isOpen
+              ? "text-[#132A13]"
+              : "text-gray-700 group-hover:text-[#132A13]"
+          }`}
         >
-          {isOpen ? <Minus size={20} /> : <Plus size={20} />}
+          {question}
+        </h3>
+        {/* Modern Icon style */}
+        <span
+          className={`w-9 h-9 rounded-full flex items-center justify-center transition-all ${
+            isOpen
+              ? "bg-[#132A13] text-white rotate-180"
+              : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+          }`}
+        >
+          {isOpen ? <Minus size={18} /> : <Plus size={18} />}
         </span>
       </button>
       <AnimatePresence>
@@ -25,57 +39,117 @@ function FAQItem({ question, answer }) {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.35, ease: "easeInOut" }}
             className="overflow-hidden"
           >
-            <p className="pt-4 text-gray-600">{answer}</p>
+            <p className="pt-3 pb-1 text-gray-600 leading-relaxed max-w-[90%]">
+              {answer}
+            </p>
           </motion.div>
         )}
       </AnimatePresence>
     </div>
   );
 }
-export default function FAQ() {
-  return (
-    <section className="max-w-3xl mx-auto px-6 py-6">
-      <div className="text-center mb-16">
-        <span className="px-5 py-2 rounded-full bg-gray-100 text-sm font-medium text-gray-700 mb-6">
-          FAQ
-        </span>
-        <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-[#132A13] mb-6 mt-4">
-          Frequently asked questions
-        </h2>
-        <p className="text-gray-600 text-lg">
-          Here are some common questions asked by our clients before starting a
-          project.
-        </p>
-      </div>
 
-      <div className="flex flex-col gap-4">
-        {[
-          {
-            q: "How long does a typical interior design project take?",
-            a: "It depends on the size of the project. A standard 3BHK apartment interior takes about 45 to 60 days from start to finish.",
-          },
-          {
-            q: "Do you provide budget-friendly options?",
-            a: "Yes, we provide options in materials and design choices that suit both your aesthetic vision and your budget.",
-          },
-          {
-            q: "Can we select materials ourselves during execution?",
-            a: "Absolutely! We guide you in material selection and even accompany you on market visits so you can choose the best.",
-          },
-          {
-            q: "Do you integrate old furniture into the new design?",
-            a: "Yes, if you have any antique or special furniture pieces, we thoughtfully integrate them while designing the new space.",
-          },
-          {
-            q: "What is your design consultation process like?",
-            a: "First, we visit the site and discuss your requirements. Then, we present ideas and concepts to you through detailed 2D/3D layouts.",
-          },
-        ].map((faq, i) => (
-          <FAQItem key={i} question={faq.q} answer={faq.a} />
-        ))}
+export default function FAQ() {
+  const faqs = [
+    {
+      q: "How long does a typical interior design project take?",
+      a: "It depends on the size of the project. A standard 3BHK apartment interior takes about 45 to 60 days from start to finish.",
+    },
+    {
+      q: "Do you provide budget-friendly options?",
+      a: "Yes, we provide options in materials and design choices that suit both your aesthetic vision and your budget.",
+    },
+    {
+      q: "Can we select materials ourselves during execution?",
+      a: "Absolutely! We guide you in material selection and even accompany you on market visits.",
+    },
+    {
+      q: "Do you integrate old furniture into the new design?",
+      a: "Yes, if you have any antique pieces, we thoughtfully integrate them while designing the new space.",
+    },
+    {
+      q: "What is your design consultation process like?",
+      a: "First, we visit the site and discuss your requirements. Then, we present ideas through 2D/3D layouts.",
+    },
+  ];
+
+  return (
+    // Height balanced rakhne ke liye `items-stretch` use kiya hai
+    <section className="max-w-7xl mx-auto px-6 py-20 md:py-20">
+      <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 items-stretch">
+        {/* LEFT COLUMN: Modern Content Box (Equal Height) */}
+        <div className="lg:w-5/12 w-full flex flex-col">
+          <div className="bg-[#132A13]/5 p-10 md:p-12 rounded-3xl flex-grow flex flex-col justify-between">
+            <div>
+              <div className="flex items-center gap-3 mb-6">
+                <div className="bg-[#132A13] p-2.5 rounded-xl text-white">
+                  <HelpCircle size={22} />
+                </div>
+                <span className="text-sm font-bold tracking-widest text-[#132A13] uppercase">
+                  Support
+                </span>
+              </div>
+
+              <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-[#132A13] mb-6 leading-tight">
+                Frequently asked questions
+              </h2>
+              <p className="text-gray-600 text-lg mb-12">
+                Everything you need to know about our process, budget options,
+                and how we transform your space into a peaceful home.
+              </p>
+            </div>
+
+            {/* Bottom Section: Choti Image + Contact CTA */}
+            <div className="mt-auto border-t border-[#132A13]/10 pt-8 flex items-center gap-6">
+              <div className="w-20 h-20 rounded-2xl overflow-hidden shadow-lg border-2 border-white">
+                <img
+                  src="/IMG_8905.JPG" // Apni image ka path ensure karein
+                  className="w-full h-full object-cover"
+                  alt="Interior Design Sample"
+                />
+              </div>
+              <div>
+                <p className="text-gray-600 text-sm mb-1">
+                  Still have questions?
+                </p>
+                <Link
+                  href="/contact"
+                  className="group relative inline-flex items-center gap-3 px-1 py-2 font-semibold text-[#132A13] transition-all"
+                >
+                  <span className="relative">
+                    Get in Touch
+                    {/* Animated Underline */}
+                    <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-[#132A13] transition-all duration-300 group-hover:w-full"></span>
+                  </span>
+
+                  <div className="flex items-center justify-center w-10 h-10 rounded-full border border-[#132A13]/20 group-hover:border-[#132A13] group-hover:bg-[#132A13] group-hover:text-white transition-all duration-300">
+                    <ArrowRight
+                      size={18}
+                      className="group-hover:translate-x-0.5 transition-transform"
+                    />
+                  </div>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* RIGHT COLUMN: Minimal FAQ Accordion (Equal Height) */}
+        <div className="lg:w-7/12 w-full flex flex-col">
+          <div className="bg-white rounded-3xl p-6 md:p-10 flex-grow border border-gray-100 shadow-lg shadow-gray-50">
+            {faqs.map((faq, i) => (
+              <FAQItem
+                key={i}
+                question={faq.q}
+                answer={faq.a}
+                isLast={i === faqs.length - 1}
+              />
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );
