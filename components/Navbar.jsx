@@ -29,7 +29,7 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop Links with Flip Animation */}
-        <div className="hidden md:flex items-center gap-6 text-sm font-medium text-gray-600">
+        <div className="hidden md:flex items-center gap-6 text-md font-medium text-gray-600">
           {navLinks.map((link) => {
             const isActive = pathname === link.path;
 
@@ -94,7 +94,7 @@ export default function Navbar() {
                 key={link.path}
                 href={link.path}
                 onClick={() => setIsOpen(false)}
-                className={`text-left font-medium ${pathname === link.path ? "text-[#132A13]" : "text-gray-600"}`}
+                className={`text-left text-lg font-medium ${pathname === link.path ? "text-[#132A13]" : "text-gray-600"}`}
               >
                 {link.name}
               </Link>
