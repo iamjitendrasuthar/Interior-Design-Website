@@ -1,6 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import { Paintbrush, Award, Sparkles, ShieldCheck } from "lucide-react";
+import Counter from "./Counter";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 40 },
@@ -128,7 +129,7 @@ export default function WhyChooseUs() {
             </p>
           </div>
           <div className="text-6xl md:text-8xl font-bold text-[#132A13] opacity-20">
-            50+
+            <Counter value={50} />+
           </div>
         </motion.div>
       </motion.div>
