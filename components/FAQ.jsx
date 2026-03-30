@@ -1,16 +1,14 @@
 "use client";
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Minus, HelpCircle, ArrowRight } from "lucide-react"; // Naya icon add kiya
+import { Plus, Minus, HelpCircle, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
-function FAQItem({ question, answer, isLast }) {
-  const [isOpen, setIsOpen] = useState(false);
-
+function FAQItem({ question, answer, isLast, isOpen, toggle }) {
   return (
     <div className={`py-5 ${!isLast ? "border-b border-gray-100" : ""}`}>
       <button
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={toggle}
         className="w-full flex items-center justify-between text-left focus:outline-none group"
       >
         <h3
@@ -22,16 +20,19 @@ function FAQItem({ question, answer, isLast }) {
         >
           {question}
         </h3>
-        {/* Modern Icon style */}
-        <span
-          className={`w-9 h-9 rounded-full flex items-center justify-center transition-all ${
-            isOpen
-              ? "bg-[#132A13] text-white rotate-180"
-              : "bg-gray-100 text-gray-500 hover:bg-gray-200"
-          }`}
-        >
-          {isOpen ? <Minus size={18} /> : <Plus size={18} />}
-        </span>
+        {/* Modern Icon style - FIXED CIRCLE */}
+        <div className="flex-none ml-4">
+          <span
+            className={`w-9 h-9 flex items-center justify-center rounded-full transition-all duration-300 shrink-0 ${
+              isOpen
+                ? "bg-[#132A13] text-white rotate-180"
+                : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+            }`}
+            style={{ minWidth: "35px", minHeight: "35px" }}
+          >
+            {isOpen ? <Minus size={18} /> : <Plus size={18} />}
+          </span>
+        </div>
       </button>
       <AnimatePresence>
         {isOpen && (
@@ -53,10 +54,12 @@ function FAQItem({ question, answer, isLast }) {
 }
 
 export default function FAQ() {
+  const [openIndex, setOpenIndex] = useState(null);
+
   const faqs = [
     {
       q: "How long does a typical interior design project take?",
-      a: "It depends on the size of the project. A standard 3BHK apartment interior takes about 45 to 60 days from start to finish.",
+      a: "It depends on the size of the project. A standard 3BHK apartment interior takes about 45 to 60 days.",
     },
     {
       q: "Do you provide budget-friendly options?",
@@ -76,13 +79,16 @@ export default function FAQ() {
     },
   ];
 
+  const handleToggle = (index) => {
+    setOpenIndex(openIndex === index ? null : index);
+  };
+
   return (
-    // Height balanced rakhne ke liye `items-stretch` use kiya hai
-    <section className="max-w-7xl mx-auto px-6 py-20 md:py-20">
+    <section className="max-w-7xl mx-auto px-6 py-20">
       <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 items-stretch">
-        {/* LEFT COLUMN: Modern Content Box (Equal Height) */}
+        {/* LEFT COLUMN: Modern Content Box */}
         <div className="lg:w-5/12 w-full flex flex-col">
-          <div className="bg-[#132A13]/5 p-10 md:p-12 rounded-3xl flex-grow flex flex-col justify-between">
+          <div className="bg-[#132A13]/5 p-10 md:p-12 rounded-3xl flex-grow flex flex-col justify-between border border-[#132A13]/10">
             <div>
               <div className="flex items-center gap-3 mb-6">
                 <div className="bg-[#132A13] p-2.5 rounded-xl text-white">
@@ -92,23 +98,21 @@ export default function FAQ() {
                   Support
                 </span>
               </div>
-
               <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-[#132A13] mb-6 leading-tight">
                 Frequently asked questions
               </h2>
               <p className="text-gray-600 text-lg mb-12">
-                Everything you need to know about our process, budget options,
-                and how we transform your space into a peaceful home.
+                Everything you need to know about our process and how we
+                transform your space.
               </p>
             </div>
 
-            {/* Bottom Section: Choti Image + Contact CTA */}
             <div className="mt-auto border-t border-[#132A13]/10 pt-8 flex items-center gap-6">
               <div className="w-20 h-20 rounded-2xl overflow-hidden shadow-lg border-2 border-white">
                 <img
-                  src="/IMG_8905.JPG" // Apni image ka path ensure karein
+                  src="/IMG_8905.JPG"
                   className="w-full h-full object-cover"
-                  alt="Interior Design Sample"
+                  alt="Interior"
                 />
               </div>
               <div>
@@ -117,11 +121,10 @@ export default function FAQ() {
                 </p>
                 <Link
                   href="/contact"
-                  className="group relative inline-flex items-center gap-3 px-1 py-2 font-semibold text-[#132A13] transition-all"
+                  className="group relative inline-flex items-center gap-3 font-semibold text-[#132A13]"
                 >
                   <span className="relative">
                     Get in Touch
-                    {/* Animated Underline */}
                     <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-[#132A13] transition-all duration-300 group-hover:w-full"></span>
                   </span>
 
@@ -137,7 +140,7 @@ export default function FAQ() {
           </div>
         </div>
 
-        {/* RIGHT COLUMN: Minimal FAQ Accordion (Equal Height) */}
+        {/* RIGHT COLUMN: FAQ Accordion */}
         <div className="lg:w-7/12 w-full flex flex-col">
           <div className="bg-white rounded-3xl p-6 md:p-10 flex-grow border border-gray-100 shadow-lg shadow-gray-50">
             {faqs.map((faq, i) => (
@@ -146,6 +149,8 @@ export default function FAQ() {
                 question={faq.q}
                 answer={faq.a}
                 isLast={i === faqs.length - 1}
+                isOpen={openIndex === i}
+                toggle={() => handleToggle(i)}
               />
             ))}
           </div>
