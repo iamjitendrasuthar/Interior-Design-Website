@@ -38,7 +38,7 @@ export default function Navbar() {
                 key={link.path}
                 href={link.path}
                 className={`relative px-2 py-1 overflow-hidden block ${
-                  isActive ? "text-[#132A13]" : "text-gray-600"
+                  isActive ? "text-[#132A13]" : "text-gray-500"
                 }`}
               >
                 <motion.div
@@ -94,7 +94,7 @@ export default function Navbar() {
                 key={link.path}
                 href={link.path}
                 onClick={() => setIsOpen(false)}
-                className={`text-left text-lg font-medium ${pathname === link.path ? "text-[#132A13]" : "text-gray-600"}`}
+                className={`text-left text-lg font-medium ${pathname === link.path ? "text-[#132A13]" : "text-gray-500"}`}
               >
                 {link.name}
               </Link>
