@@ -107,22 +107,23 @@ export default function Navbar() {
       <AnimatePresence>
         {isOpen && (
           <div className="fixed inset-0 z-[9999] md:hidden">
-            {/* 1. Full Screen Backdrop Blur Overlay */}
+            {/* Backdrop Blur - iski height h-full rakhein */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsOpen(false)}
-              className="absolute inset-0 bg-black/20 backdrop-blur-md h-screen w-screen"
+              className="absolute inset-0 bg-black/20 backdrop-blur-md h-full w-full"
             />
 
-            {/* 2. Right Side Slide-in Menu (80% width) */}
+            {/* Right Side Slide-in Menu */}
             <motion.div
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="absolute top-0 right-0 h-screen w-[80%] bg-white shadow-2xl flex flex-col p-8"
+              // FIX: h-screen ki jagah h-[100dvh] use karein aur pb-20 ya pb-24 padding dein
+              className="absolute top-0 right-0 h-[100dvh] w-[80%] bg-white shadow-2xl flex flex-col p-8 pb-20"
             >
               {/* Menu Close Button */}
               <div className="flex justify-between items-center mb-10">
@@ -161,10 +162,10 @@ export default function Navbar() {
                 ))}
               </nav>
 
-              {/* Bottom Contact Button */}
-              <div className="mt-auto pb-10">
+              {/* Bottom Contact Button - Iski position fix karne ke liye mt-auto aur extra padding */}
+              <div className="mt-auto">
                 <Link href="/contact" onClick={() => setIsOpen(false)}>
-                  <button className="w-full bg-[#132A13] text-white py-5 rounded-2xl font-bold text-xl shadow-xl shadow-[#132A13]/20">
+                  <button className="w-full bg-[#132A13] text-white py-4 rounded-2xl font-bold text-lg shadow-lg">
                     Get in Touch
                   </button>
                 </Link>
