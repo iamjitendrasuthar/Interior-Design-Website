@@ -47,7 +47,7 @@ export default function Hero() {
   return (
     <section
       ref={containerRef}
-      className="relative w-full overflow-hidden bg-[#FDFDFB] pt-24 pb-24 md:pt-8 md:pb-40"
+      className="relative w-full overflow-hidden bg-[#FDFDFB] pt-24 pb-24 md:pt-32 md:pb-40"
     >
       {/* Background Decor */}
       <div className="absolute inset-0 pointer-events-none">
