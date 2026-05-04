@@ -57,7 +57,8 @@ export default function Hero() {
       </div>
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
-        <div className="flex flex-col lg:flex-row items-center gap-20">
+        <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-20">
+          {" "}
           {/* --- LEFT SIDE: Content --- */}
           <div className="w-full lg:w-1/2 text-center lg:text-left">
             <motion.div
@@ -147,7 +148,6 @@ export default function Hero() {
               </div>
             </div>
           </div>
-
           {/* --- RIGHT SIDE: Portrait Filmstrip Gallery --- */}
           <div className="w-full lg:w-7/12 relative h-[70vh] lg:h-[75vh] flex items-center px-4 lg:px-0 overflow-x-clip lg:overflow-visible">
             {/* Main Row Container */}
