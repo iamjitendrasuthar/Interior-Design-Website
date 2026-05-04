@@ -67,7 +67,7 @@ export default function Hero() {
             >
               <Sparkles size={16} className="text-[#132A13]" />
               <span className="text-xs font-bold uppercase tracking-widest text-[#132A13]/70">
-                Award Winning Studio 2024
+                Crafting Spaces Since 2018{" "}
               </span>
             </motion.div>
 
@@ -100,8 +100,13 @@ export default function Hero() {
               className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 w-full"
             >
               <Link href="/portfolio" className="w-full sm:w-auto group">
-                <div className="bg-[#132A13] text-white w-full justify-between sm:justify-start pl-8 pr-2 py-2 rounded-full font-medium flex items-center gap-6 shadow-xl hover:shadow-[#132A13]/20 transition-all">
-                  Explore Portfolio
+                <div className="bg-[#132A13] text-white w-full px-2 py-2 rounded-full font-medium flex items-center justify-center sm:justify-start gap-6 shadow-xl hover:shadow-[#132A13]/20 transition-all border border-[#132A13]">
+                  {/* Text container with flex-grow to push it to center on mobile */}
+                  <span className="flex-grow sm:flex-grow-0 text-center sm:text-left pl-10 sm:pl-6">
+                    Explore Portfolio
+                  </span>
+
+                  {/* Icon remains on the right */}
                   <div className="bg-white/10 p-3 rounded-full group-hover:bg-white/20 transition-colors">
                     <ArrowRight size={20} />
                   </div>
