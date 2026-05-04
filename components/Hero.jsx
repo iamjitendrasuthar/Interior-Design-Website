@@ -20,13 +20,6 @@ const staggerContainer = {
 
 export default function Hero() {
   const containerRef = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end start"],
-  });
-
-  const y1 = useTransform(scrollYProgress, [0, 1], [0, -50]);
-  const y2 = useTransform(scrollYProgress, [0, 1], [0, 50]);
 
   const images = [
     {
@@ -54,7 +47,7 @@ export default function Hero() {
   return (
     <section
       ref={containerRef}
-      className="relative w-full overflow-hidden bg-[#FDFDFB] pt-8 pb-24 md:pt-8 md:pb-40"
+      className="relative w-full overflow-hidden bg-[#FDFDFB] pt-24 pb-24 md:pt-32 md:pb-40"
     >
       {/* Background Decor */}
       <div className="absolute inset-0 pointer-events-none">
