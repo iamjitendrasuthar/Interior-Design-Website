@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -7,18 +7,28 @@ import { Menu, X } from "lucide-react";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const navLinks = [
     { name: "Home", path: "/" },
     { name: "Services", path: "/services" },
-    { name: "About", path: "/about" },
     { name: "Portfolio", path: "/portfolio" },
-    { name: "Contact", path: "/contact" },
+    { name: "About", path: "/about" },
   ];
 
   return (
-    <nav className="fixed top-0 w-full bg-white/90 backdrop-blur-md z-[999] border-b border-gray-100">
+    <header
+      className={`fixed top-0 w-full z-[1000] transition-all duration-300 ${
+        scrolled ? "bg-white/90 backdrop-blur-md shadow-sm" : "bg-white"
+      }`}
+    >
       <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 cursor-pointer">
@@ -70,38 +80,70 @@ export default function Navbar() {
               </Link>
             );
           })}
+          <Link href={"/contact"}>
+            <button className="bg-[#132A13] text-white px-6 py-3 text-sm rounded-full hover:bg-opacity-90 transition-all">
+              Contact
+            </button>
+          </Link>
         </div>
 
-        {/* Mobile Menu Button */}
+        {/* Mobile Toggle */}
         <div className="md:hidden">
-          <button onClick={() => setIsOpen(!isOpen)} className="text-gray-900">
-            {isOpen ? <X size={24} /> : <Menu size={24} />}
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="p-2 text-[#132A13] bg-gray-50 rounded-lg"
+          >
+            {isOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Dropdown (Top to Bottom) */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-white border-b border-gray-100 px-6 py-4 flex flex-col gap-4 overflow-hidden"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="absolute top-full left-0 w-full bg-white border-t border-gray-100 shadow-xl md:hidden"
           >
-            {navLinks.map((link) => (
-              <Link
-                key={link.path}
-                href={link.path}
-                onClick={() => setIsOpen(false)}
-                className={`text-left text-lg font-medium ${pathname === link.path ? "text-[#132A13]" : "text-gray-500"}`}
-              >
-                {link.name}
-              </Link>
-            ))}
+            <div className="flex flex-col p-6 gap-4">
+              {navLinks.map((link, i) => (
+                <motion.div
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.05 }}
+                  key={link.path}
+                >
+                  <Link
+                    href={link.path}
+                    onClick={() => setIsOpen(false)}
+                    className={`flex items-center justify-between text-lg font-medium ${
+                      pathname === link.path
+                        ? "text-[#132A13]"
+                        : "text-gray-600"
+                    }`}
+                  >
+                    {link.name}
+                    {pathname === link.path && (
+                      <div className="w-1.5 h-1.5 bg-[#132A13] rounded-full" />
+                    )}
+                  </Link>
+                </motion.div>
+              ))}
+
+              <div className="mt-4 pt-4 border-t border-gray-100">
+                <Link href={"/contact"} onClick={() => setIsOpen(false)}>
+                  <button className="w-full bg-[#132A13] text-white py-3 rounded-xl font-semibold">
+                    Contact Us
+                  </button>
+                </Link>
+              </div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
-    </nav>
+    </header>
   );
 }
