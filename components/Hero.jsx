@@ -47,7 +47,7 @@ export default function Hero() {
   return (
     <section
       ref={containerRef}
-      className="relative w-full overflow-hidden bg-[#FDFDFB] pt-24 pb-24 md:pt-32 md:pb-40"
+      className="relative w-full overflow-hidden bg-[#FDFDFB] pt-24 pb-24 md:pt-8 md:pb-40"
     >
       {/* Background Decor */}
       <div className="absolute inset-0 pointer-events-none">
@@ -144,22 +144,22 @@ export default function Hero() {
           </div>
 
           {/* --- RIGHT SIDE: Portrait Filmstrip Gallery --- */}
-          <div className="w-full lg:w-7/12 relative h-[65vh] lg:h-[75vh] flex items-center px-4">
+          <div className="w-full lg:w-7/12 relative h-[70vh] lg:h-[75vh] flex items-center px-4 lg:px-0 overflow-x-clip lg:overflow-visible">
             {/* Main Row Container */}
             <motion.div
               variants={staggerContainer}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
-              className="flex gap-4 lg:gap-6 w-full h-full items-center"
+              className="flex gap-3 lg:gap-6 w-full h-full items-center justify-center"
             >
               {images.map((img, i) => (
                 <motion.div
                   key={i}
                   variants={fadeInUp}
-                  className={`flex-1 relative group h-[85%] transition-all duration-700 hover:h-[95%] ${img.offset}`}
+                  className={`flex-1 relative group h-[75%] lg:h-[85%] transition-all duration-700 hover:h-[80%] lg:hover:h-[95%] ${img.offset}`}
                 >
-                  {/* Main Image Wrapper: overflow-hidden is key here */}
+                  {/* Main Image Wrapper */}
                   <div
                     className={`relative w-full h-full overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.1)] transition-all duration-700 ${img.radius}`}
                   >
@@ -170,23 +170,23 @@ export default function Hero() {
                       className="w-full h-full object-cover transition-all duration-[1.5s] group-hover:scale-110 grayscale-[30%] group-hover:grayscale-0"
                     />
 
-                    {/* Glassy Overlay: Using rounded-inherit to prevent square corners */}
+                    {/* Glassy Overlay */}
                     <div className="absolute inset-0 bg-gradient-to-t from-[#132A13]/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[inherit]" />
 
                     {/* Numbering */}
-                    <div className="absolute top-6 left-6 text-white/50 text-[10px] font-mono group-hover:text-white transition-colors z-10">
+                    <div className="absolute top-4 left-4 lg:top-6 lg:left-6 text-white/50 text-[8px] lg:text-[10px] font-mono group-hover:text-white transition-colors z-10">
                       0{i + 1}
                     </div>
 
                     {/* Content Label */}
-                    <div className="absolute inset-x-0 bottom-8 text-center opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0 z-10">
-                      <p className="text-white text-[10px] font-bold uppercase tracking-[0.3em]">
+                    <div className="absolute inset-x-0 bottom-6 lg:bottom-8 text-center opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0 z-10">
+                      <p className="text-white text-[8px] lg:text-[10px] font-bold uppercase tracking-[0.2em] lg:tracking-[0.3em]">
                         Minimalist
                       </p>
                     </div>
                   </div>
 
-                  {/* Outer Shadow Glow (Optional): Makes the round shape pop more */}
+                  {/* Outer Shadow Glow */}
                   <div
                     className={`absolute inset-0 -z-10 blur-2xl opacity-0 group-hover:opacity-20 bg-[#132A13] transition-opacity duration-700 ${img.radius}`}
                   />
@@ -194,16 +194,18 @@ export default function Hero() {
               ))}
             </motion.div>
 
-            {/* Experience Badge (Fixed Placement) */}
+            {/* Experience Badge (Fixed Placement for Mobile) */}
             <motion.div
               initial={{ scale: 0 }}
               whileInView={{ scale: 1 }}
               transition={{ type: "spring", stiffness: 100, delay: 1 }}
-              className="absolute -bottom-10 -left-10 z-30"
+              className="absolute bottom-2 left-2 lg:-bottom-10 lg:-left-10 z-30"
             >
-              <div className="w-36 h-36 bg-[#132A13] rounded-full border-[8px] border-[#F9FBF9] flex flex-col items-center justify-center text-white shadow-2xl">
-                <span className="text-3xl font-black italic">12+</span>
-                <span className="text-[7px] uppercase tracking-widest text-white/50 text-center">
+              <div className="w-24 h-24 lg:w-36 lg:h-36 bg-[#132A13] rounded-full border-[4px] lg:border-[8px] border-[#F9FBF9] flex flex-col items-center justify-center text-white shadow-2xl">
+                <span className="text-xl lg:text-3xl font-black italic">
+                  12+
+                </span>
+                <span className="text-[6px] lg:text-[7px] uppercase tracking-widest text-white/50 text-center leading-tight">
                   Global <br /> Projects
                 </span>
               </div>
