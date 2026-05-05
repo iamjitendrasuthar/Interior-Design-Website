@@ -87,20 +87,21 @@ export default function ProjectDetail({ params }) {
   return (
     <div className="w-full pt-32 pb-24">
       <div className="max-w-7xl mx-auto px-6">
-        {/* Back Button */}
+        {/* Back Button - Minimalist */}
         <button
           onClick={() => router.back()}
-          className="inline-flex items-center gap-2 text-gray-500 hover:text-[#132A13] font-medium mb-8 transition-colors"
+          className="flex items-center gap-2 text-sm uppercase tracking-widest text-gray-400 hover:text-black transition-colors mb-12"
         >
-          <ArrowLeft size={20} /> Back
+          <ArrowLeft size={16} /> Back to Projects
         </button>
 
         {/* Project Header */}
         <div className="mb-12">
-          <span className="px-4 py-1.5 rounded-full bg-gray-100 text-sm font-medium text-gray-700 mb-4 inline-block">
+          <div className="flex items-center gap-4 mb-4 text-[#132A13] font-medium uppercase tracking-tighter">
+            <span className="w-10 h-[1px] bg-[#132A13]"></span>
             {project.category}
-          </span>
-          <h1 className="text-4xl md:text-6xl font-semibold tracking-tight text-[#132A13] mb-8">
+          </div>
+          <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-12 text-[#132A13]">
             {project.title}
           </h1>
 
