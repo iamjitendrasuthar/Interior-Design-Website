@@ -122,7 +122,7 @@ export default function Portfolio() {
             {projects.map((project) => (
               <Link
                 key={project.id}
-                href={`/portfolio/${project.slug || project.id}`}
+                href={`/portfolio/${project.id}`}
               >
                 <motion.div
                   // @ts-ignore
