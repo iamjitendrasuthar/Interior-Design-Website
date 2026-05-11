@@ -119,7 +119,10 @@ export default function App() {
       const snap = await getDocs(q);
       setProjects(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
     } catch (e) {
-      setError("Firebase se data nahi aaya. Config check karo. " + e.message);
+      setError(
+        "Failed to fetch data from Firebase. Please check your configuration. " +
+          e.message,
+      );
     } finally {
       setLoading(false);
     }
@@ -131,7 +134,7 @@ export default function App() {
 
   const handleSave = async () => {
     if (!form.title.trim() || !form.img.trim()) {
-      showToast("Title aur Hero Image URL zaroori hai!", "error");
+      showToast("Title and Hero Image are necessary!", "error");
       return;
     }
     setSaving(true);
@@ -152,13 +155,13 @@ export default function App() {
           ...payload,
           updatedAt: serverTimestamp(),
         });
-        showToast("Project update ho gaya ✓");
+        showToast("Project updated successfully ✓");
       } else {
         await addDoc(collection(db, "portfolio"), {
           ...payload,
           createdAt: serverTimestamp(),
         });
-        showToast("Naya project add ho gaya ✓");
+        showToast("New project added successfully ✓");
       }
       setForm(emptyForm);
       setEditId(null);
@@ -391,10 +394,11 @@ export default function App() {
           >
             <div style={{ fontSize: 40, marginBottom: 12 }}>🗑️</div>
             <h3 style={{ margin: "0 0 8px", color: "#132A13" }}>
-              Project Delete Karein?
+              Delete Project?
             </h3>
             <p style={{ color: "#777", fontSize: 14, margin: "0 0 24px" }}>
-              Ye action permanent hai. Firebase se bhi hata dega.
+              This action is permanent and will also remove the data from
+              Firebase.
             </p>
             <div style={{ display: "flex", gap: 12, justifyContent: "center" }}>
               <button style={s.outBtn} onClick={() => setDeleteId(null)}>
@@ -555,7 +559,7 @@ export default function App() {
               <p style={{ margin: "4px 0 0", color: "#888", fontSize: 14 }}>
                 {loading
                   ? "Loading..."
-                  : `${projects.length} projects Firebase mein saved hain`}
+                  : `${projects.length} projects are saved in Firebase`}{" "}
               </p>
             </div>
             <button style={s.btn("#f0f0f0", "#555")} onClick={fetchProjects}>
@@ -588,13 +592,13 @@ export default function App() {
                 fontSize: 15,
               }}
             >
-              Firebase se load ho raha hai...
+              Loading from Firebase...
             </div>
           ) : projects.length === 0 && !error ? (
             <div style={{ textAlign: "center", padding: 80 }}>
               <div style={{ fontSize: 48, marginBottom: 12 }}>🏠</div>
               <p style={{ color: "#aaa", fontSize: 16, marginBottom: 20 }}>
-                Koi project nahi mila. Pehla project add karo!
+                No project found. Add your first project!
               </p>
               <button style={s.btn()} onClick={() => setView("form")}>
                 + Add Project
@@ -689,7 +693,7 @@ export default function App() {
         <div style={{ padding: "0 16px" }}>
           <div style={s.formCard}>
             <h2 style={{ margin: "0 0 24px", color: "#132A13", fontSize: 22 }}>
-              {editId ? "✏️ Project Edit Karo" : "➕ Naya Project Add Karo"}
+              {editId ? "✏️ Edit Project" : "➕ Add New Project"}{" "}
             </h2>
 
             <div
@@ -907,8 +911,8 @@ export default function App() {
                 {saving
                   ? "Saving..."
                   : editId
-                    ? "✓ Update Karo"
-                    : "✓ Firebase Mein Save Karo"}
+                    ? "✓ Update Project"
+                    : "✓ Save to Firebase"}
               </button>
               <button
                 style={{ ...s.outBtn, padding: "14px 24px" }}
