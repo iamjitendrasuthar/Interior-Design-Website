@@ -85,9 +85,37 @@ export default function Navbar() {
               );
             })}
             <Link href="/contact">
-              <button className="bg-[#132A13] text-white px-7 py-2.5 rounded-full text-sm font-semibold hover:bg-[#1a3a1a] transition-all active:scale-95">
-                Get in Touch
-              </button>
+              <motion.button
+                initial="initial"
+                whileHover="hover"
+                className="bg-[#132A13] text-white px-7 py-2.5 rounded-full text-sm font-semibold hover:bg-[#1a3a1a] transition-all active:scale-95 overflow-hidden"
+              >
+                <div className="relative h-5 overflow-hidden flex items-center justify-center">
+                  {/* Top Text */}
+                  <motion.span
+                    variants={{
+                      initial: { y: 0 },
+                      hover: { y: "-100%" },
+                    }}
+                    transition={{ duration: 0.35, ease: [0.65, 0, 0.35, 1] }}
+                    className="block"
+                  >
+                    Get in Touch
+                  </motion.span>
+
+                  {/* Bottom Text */}
+                  <motion.span
+                    variants={{
+                      initial: { y: "100%" },
+                      hover: { y: 0 },
+                    }}
+                    transition={{ duration: 0.35, ease: [0.65, 0, 0.35, 1] }}
+                    className="absolute left-0 top-0 w-full block"
+                  >
+                    Get in Touch
+                  </motion.span>
+                </div>
+              </motion.button>
             </Link>
           </div>
 
