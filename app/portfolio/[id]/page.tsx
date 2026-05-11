@@ -13,6 +13,84 @@ import {
 } from "lucide-react";
 import CTA from "@/components/CTA";
 
+// Skeleton component
+function Skeleton({ className }: { className?: string }) {
+  return (
+    <div
+      className={`animate-pulse bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 bg-[length:200%_100%] rounded-2xl ${className}`}
+      style={{
+        animation: "shimmer 1.5s infinite",
+      }}
+    />
+  );
+}
+
+function ProjectSkeleton() {
+  return (
+    <div className="w-full pt-32 pb-24">
+      <style>{`
+        @keyframes shimmer {
+          0% { background-position: 200% 0; }
+          100% { background-position: -200% 0; }
+        }
+      `}</style>
+      <div className="max-w-7xl mx-auto px-6">
+        {/* Back button skeleton */}
+        <Skeleton className="h-4 w-36 mb-12 rounded-full" />
+
+        {/* Category + Title */}
+        <div className="mb-12">
+          <Skeleton className="h-4 w-24 mb-4 rounded-full" />
+          <Skeleton className="h-14 w-2/3 mb-4 rounded-2xl" />
+          <Skeleton className="h-10 w-1/3 mb-12 rounded-2xl" />
+          {/* Hero Image */}
+          <Skeleton className="w-full h-[500px] md:h-[600px] rounded-3xl" />
+        </div>
+
+        {/* Info Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-16 mb-24">
+          {/* Left card */}
+          <div className="md:col-span-1 flex flex-col gap-6 p-8 bg-[#f8f9f8] rounded-3xl">
+            {[1, 2, 3].map((i) => (
+              <div key={i}>
+                <Skeleton className="h-3 w-16 mb-2 rounded-full" />
+                <Skeleton className="h-6 w-32 rounded-xl" />
+                {i < 3 && <div className="w-full h-px bg-gray-200 mt-6" />}
+              </div>
+            ))}
+          </div>
+
+          {/* Right content */}
+          <div className="md:col-span-2">
+            <Skeleton className="h-8 w-48 mb-6 rounded-xl" />
+            <Skeleton className="h-4 w-full mb-3 rounded-full" />
+            <Skeleton className="h-4 w-full mb-3 rounded-full" />
+            <Skeleton className="h-4 w-4/5 mb-3 rounded-full" />
+            <Skeleton className="h-4 w-3/4 mb-10 rounded-full" />
+
+            <Skeleton className="h-7 w-36 mb-6 rounded-xl" />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {[1, 2, 3, 4].map((i) => (
+                <Skeleton key={i} className="h-5 w-full rounded-full" />
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Gallery */}
+        <div className="mb-24">
+          <Skeleton className="h-8 w-28 mb-8 rounded-xl" />
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+              <Skeleton key={i} className="h-64 rounded-2xl" />
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function ProjectDetail({ params }) {
   const resolvedParams = use(params);
   const [project, setProject] = useState(null);
@@ -23,11 +101,9 @@ export default function ProjectDetail({ params }) {
 
   useEffect(() => {
     const fetchProject = async () => {
-      console.log("Fetching ID:", resolvedParams.id); // ← console mein ID dekho
       try {
         const docRef = doc(db, "portfolio", resolvedParams.id);
         const docSnap = await getDoc(docRef);
-        console.log("Doc exists:", docSnap.exists()); // ← true/false aayega
         if (docSnap.exists()) {
           setProject({ id: docSnap.id, ...docSnap.data() });
         } else {
@@ -43,15 +119,8 @@ export default function ProjectDetail({ params }) {
     fetchProject();
   }, [resolvedParams.id]);
 
-  if (loading)
-    return (
-      <div className="w-full pt-48 flex flex-col items-center justify-center gap-4">
-        <div className="w-8 h-8 border-2 border-[#132A13] border-t-transparent rounded-full animate-spin" />
-        <p className="text-gray-400 text-sm">Loading...</p>
-      </div>
-    );
+  if (loading) return <ProjectSkeleton />;
 
-  // Error screen - ID bhi dikhao
   if (error || !project)
     return (
       <div className="w-full pt-48 text-center px-6">
@@ -197,7 +266,7 @@ export default function ProjectDetail({ params }) {
         )}
       </div>
 
-      {/* Fullscreen Lightbox Slider */}
+      {/* Lightbox */}
       <AnimatePresence>
         {activeIndex !== null && (
           <motion.div
@@ -211,7 +280,6 @@ export default function ProjectDetail({ params }) {
             }}
             onClick={() => setActiveIndex(null)}
           >
-            {/* Image */}
             <motion.img
               key={activeIndex}
               initial={{ opacity: 0, scale: 0.95 }}
@@ -230,52 +298,83 @@ export default function ProjectDetail({ params }) {
             />
 
             {/* CLOSE */}
-            <button
-              style={{ position: "fixed", top: 20, right: 20, zIndex: 10000 }}
-              className="bg-white/15 hover:bg-white/30 rounded-full p-2 text-white transition-colors"
+            <motion.button
+              whileHover={{ scale: 1.08 }}
+              whileTap={{ scale: 0.92 }}
+              style={{ position: "fixed", top: 24, right: 24, zIndex: 10000 }}
+              className="group flex items-center justify-center w-12 h-12 rounded-2xl 
+  bg-white/10 hover:bg-white/20 
+  border border-white/20 hover:border-white/40
+  backdrop-blur-xl shadow-[0_8px_30px_rgba(0,0,0,0.25)]
+  text-white transition-all duration-300"
               onClick={(e) => {
                 e.stopPropagation();
                 setActiveIndex(null);
               }}
             >
-              <X size={22} />
-            </button>
+              <X
+                size={22}
+                className="transition-transform duration-300 group-hover:rotate-90"
+              />
+            </motion.button>
 
             {/* PREV */}
-            <button
+            <motion.button
+              whileHover={{ scale: 1.08, x: -2 }}
+              whileTap={{ scale: 0.92 }}
               style={{
                 position: "fixed",
-                left: 20,
+                left: 24,
                 top: "50%",
                 transform: "translateY(-50%)",
                 zIndex: 10000,
               }}
-              className="bg-white/15 hover:bg-white/30 rounded-full p-3 text-white transition-colors"
+              className="group flex items-center justify-center w-14 h-14 rounded-2xl
+  bg-gradient-to-br from-white/15 to-white/5
+  hover:from-white/25 hover:to-white/10
+  border border-white/20 hover:border-white/40
+  backdrop-blur-xl
+  shadow-[0_10px_40px_rgba(0,0,0,0.35)]
+  text-white transition-all duration-300"
               onClick={(e) => {
                 e.stopPropagation();
                 handlePrev(e);
               }}
             >
-              <ChevronLeft size={28} />
-            </button>
+              <ChevronLeft
+                size={30}
+                className="transition-transform duration-300 group-hover:-translate-x-1"
+              />
+            </motion.button>
 
             {/* NEXT */}
-            <button
+            <motion.button
+              whileHover={{ scale: 1.08, x: 2 }}
+              whileTap={{ scale: 0.92 }}
               style={{
                 position: "fixed",
-                right: 20,
+                right: 24,
                 top: "50%",
                 transform: "translateY(-50%)",
                 zIndex: 10000,
               }}
-              className="bg-white/15 hover:bg-white/30 rounded-full p-3 text-white transition-colors"
+              className="group flex items-center justify-center w-14 h-14 rounded-2xl
+  bg-gradient-to-br from-white/15 to-white/5
+  hover:from-white/25 hover:to-white/10
+  border border-white/20 hover:border-white/40
+  backdrop-blur-xl
+  shadow-[0_10px_40px_rgba(0,0,0,0.35)]
+  text-white transition-all duration-300"
               onClick={(e) => {
                 e.stopPropagation();
                 handleNext(e);
               }}
             >
-              <ChevronRight size={28} />
-            </button>
+              <ChevronRight
+                size={30}
+                className="transition-transform duration-300 group-hover:translate-x-1"
+              />
+            </motion.button>
 
             {/* Counter */}
             <div
@@ -286,7 +385,7 @@ export default function ProjectDetail({ params }) {
                 transform: "translateX(-50%)",
                 zIndex: 10000,
               }}
-              className="bg-black/50 text-white text-xs px-4 py-2 rounded-full"
+              className="bg-black/50 border border-white/20 text-white text-xs px-4 py-2 rounded-full backdrop-blur-sm"
             >
               {activeIndex + 1} / {project.gallery.length}
             </div>
