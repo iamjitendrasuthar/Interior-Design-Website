@@ -123,21 +123,33 @@ export default function ProjectDetail({ params }) {
 
   if (error || !project)
     return (
-      <div className="w-full pt-48 text-center px-6">
-        <p className="text-red-500 text-lg mb-2">Project nahi mila</p>
-        <p className="text-gray-400 text-sm mb-2">
-          URL ID:{" "}
-          <code className="bg-gray-100 px-2 py-1 rounded">
-            {resolvedParams.id}
-          </code>
-        </p>
-        <p className="text-gray-400 text-sm mb-6">{error}</p>
-        <button
-          onClick={() => router.back()}
-          className="text-[#132A13] underline"
+      <div className="w-full min-h-[80vh] flex items-center justify-center pt-40 pb-24 px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="max-w-lg w-full bg-white rounded-[2.5rem] p-10 md:p-16 shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-gray-100 text-center"
         >
-          ← Wapas jao
-        </button>
+          <div className="w-20 h-20 bg-[#f8f9f8] rounded-3xl flex items-center justify-center mx-auto mb-8">
+            <X size={32} className="text-[#132A13]/30" />
+          </div>
+
+          <h2 className="text-3xl md:text-4xl font-bold text-[#132A13] mb-4">
+            Project Not Found
+          </h2>
+
+          <p className="text-gray-500 text-lg mb-10 leading-relaxed">
+            The project you are looking for might have been removed or the link
+            is incorrect.
+          </p>
+
+          <button
+            onClick={() => router.push("/portfolio")}
+            className="inline-flex items-center gap-2 px-8 py-4 bg-[#132A13] text-white rounded-full hover:bg-[#132A13]/90 transition-all active:scale-95 shadow-lg shadow-black/10"
+          >
+            <ArrowLeft size={18} />
+            Back to Portfolio
+          </button>
+        </motion.div>
       </div>
     );
 
