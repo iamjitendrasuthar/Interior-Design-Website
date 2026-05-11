@@ -2,9 +2,7 @@
 import { motion } from "framer-motion";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { collection, getDocs, query, orderBy } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+
 const fadeInUp = {
   hidden: { opacity: 0, y: 40 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
@@ -19,21 +17,44 @@ const staggerContainer = {
 };
 
 export default function Portfolio() {
-  const [projects, setProjects] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetch = async () => {
-      const q = query(
-        collection(db, "portfolio"),
-        orderBy("createdAt", "desc"),
-      );
-      const snap = await getDocs(q);
-      setProjects(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
-      setLoading(false);
-    };
-    fetch();
-  }, []);
+  const projects = [
+    {
+      id: "minimalist-villa-pune",
+      tag: "Residential",
+      title: "Minimalist Villa, Pune",
+      img: "https://images.unsplash.com/photo-1600210491892-03d54c0aaf87?q=80&w=600&auto=format&fit=crop](https://images.unsplash.com/photo-1600210491892-03d54c0aaf87?q=80&w=600&auto=format&fit=crop)",
+    },
+    {
+      id: "luxury-penthouse-mumbai",
+      tag: "Apartment",
+      title: "Luxury Penthouse, Mumbai",
+      img: "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?q=80&w=600&auto=format&fit=crop](https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?q=80&w=600&auto=format&fit=crop)",
+    },
+    {
+      id: "startup-workspace-blr",
+      tag: "Commercial",
+      title: "Startup Workspace, Blr",
+      img: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?q=80&w=600&auto=format&fit=crop](https://images.unsplash.com/photo-1497366754035-f200968a6e72?q=80&w=600&auto=format&fit=crop)",
+    },
+    {
+      id: "modern-duplex-delhi",
+      tag: "Residential",
+      title: "Modern Duplex, Delhi",
+      img: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=600&auto=format&fit=crop](https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=600&auto=format&fit=crop)",
+    },
+    {
+      id: "modular-kitchen-setup",
+      tag: "Kitchen",
+      title: "Modular Kitchen Setup",
+      img: "https://images.unsplash.com/photo-1503174971373-b1f69850bded?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8aW50ZXJpb3IlMjBkZXNpZ258ZW58MHwwfDB8fHww",
+    },
+    {
+      id: "boutique-cafe-goa",
+      tag: "Commercial",
+      title: "Boutique Cafe, Goa",
+      img: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?q=80&w=600&auto=format&fit=crop](https://images.unsplash.com/photo-1554118811-1e0d58224f24?q=80&w=600&auto=format&fit=crop)",
+    },
+  ];
 
   return (
     <div className="w-full pt-32 pb-24 max-w-7xl mx-auto px-6">
@@ -69,7 +90,11 @@ export default function Portfolio() {
         >
           {projects.map((project, i) => (
             <Link key={project.id} href={`/portfolio/${project.id}`}>
-              <motion.div variants={fadeInUp} className="group cursor-pointer">
+              <motion.div
+                // @ts-ignore
+                variants={fadeInUp}
+                className="group cursor-pointer"
+              >
                 <div className="rounded-3xl overflow-hidden h-72 mb-6 relative">
                   <img
                     src={project.img}
