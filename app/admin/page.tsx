@@ -14,6 +14,8 @@ import {
   query,
   orderBy,
 } from "firebase/firestore";
+import LogoutButton from "@/components/Logoutbutton";
+import { ArrowLeft, Plus } from "lucide-react";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAdMJCDCe_PrMzhfttNkhoraS0QMsbRHL4",
@@ -318,38 +320,59 @@ export default function App() {
         rel="stylesheet"
       />
 
-      <div style={s.header}>
-        <span style={s.logo}>🌿 Portfolio Admin</span>
-        <div style={{ display: "flex", gap: 10 }}>
-          {view !== "list" && (
-            <button
-              style={{
-                ...s.btn("#ffffff22", "#fff"),
-                border: "1px solid #ffffff44",
-              }}
-              onClick={() => {
-                setView("list");
-                setForm(emptyForm);
-                setEditId(null);
-              }}
-            >
-              ← Back
-            </button>
-          )}
-          {view === "list" && (
-            <button
-              style={s.btn("#4F772D")}
-              onClick={() => {
-                setForm(emptyForm);
-                setEditId(null);
-                setView("form");
-              }}
-            >
-              + New Project
-            </button>
-          )}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-[#132A13]/90 backdrop-blur-md border-b border-white/10 px-6 py-4">
+        <div className="max-w-5xl mx-auto flex items-center justify-between">
+          {/* Left Side: Logo & Status */}
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 bg-[#4F772D] rounded-xl flex items-center justify-center shadow-lg shadow-[#4F772D]/20">
+              <span className="text-xl">🌿</span>
+            </div>
+            <div>
+              <h1 className="text-white font-bold tracking-tight leading-none">
+                Portfolio
+              </h1>
+              <span className="text-[#4F772D] text-[10px] uppercase tracking-widest font-bold">
+                Admin Console
+              </span>
+            </div>
+          </div>
+
+          {/* Right Side: Actions */}
+          <div className="flex items-center gap-3">
+            {view !== "list" && (
+              <button
+                onClick={() => {
+                  setView("list");
+                  setForm(emptyForm);
+                  setEditId(null);
+                }}
+                className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-black/70 hover:text-black hover:bg-white/10 rounded-xl transition-all border border-white/5"
+              >
+                <ArrowLeft size={16} />
+                Back to List
+              </button>
+            )}
+
+            {/* Logout Component */}
+            <div className="h-8 w-px bg-white/10 mx-2 hidden md:block" />
+            <LogoutButton />
+
+            {view === "list" && (
+              <button
+                onClick={() => {
+                  setForm(emptyForm);
+                  setEditId(null);
+                  setView("form");
+                }}
+                className="flex items-center gap-2 px-5 py-2.5 bg-[#4F772D] hover:bg-[#90A955] text-white rounded-xl font-semibold text-sm transition-all shadow-lg shadow-[#4F772D]/20 active:scale-95"
+              >
+                <Plus size={18} />
+                <span>New Project</span>
+              </button>
+            )}
+          </div>
         </div>
-      </div>
+      </header>
 
       {toast && (
         <div
@@ -409,7 +432,7 @@ export default function App() {
                 onClick={handleDelete}
                 disabled={saving}
               >
-                {saving ? "Deleting..." : "Haan, Delete Karo"}
+                {saving ? "Deleting..." : "Delete now"}
               </button>
             </div>
           </div>
@@ -543,6 +566,7 @@ export default function App() {
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
+              paddingTop: 100,
             }}
           >
             <div>
@@ -690,7 +714,7 @@ export default function App() {
       )}
 
       {view === "form" && (
-        <div style={{ padding: "0 16px" }}>
+        <div style={{ padding: "0 16px", paddingTop: 70 }}>
           <div style={s.formCard}>
             <h2 style={{ margin: "0 0 24px", color: "#132A13", fontSize: 22 }}>
               {editId ? "✏️ Edit Project" : "➕ Add New Project"}{" "}
