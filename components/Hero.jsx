@@ -47,13 +47,21 @@ export default function Hero() {
   return (
     <section
       ref={containerRef}
-      className="relative w-full overflow-hidden bg-[#FDFDFB] pt-24 pb-24 md:pt-32 md:pb-40"
+      className="relative w-full overflow-hidden bg-white pt-24 pb-24 md:pt-32 md:pb-40"
     >
       {/* Background Decor */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] bg-[#EEF2EE] rounded-full blur-[140px] opacity-50" />
-        <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-[#F3F6F3] rounded-full blur-[100px] opacity-60" />
-        <div className="absolute inset-0 opacity-[0.02] [background-image:radial-gradient(#132A13_1px,transparent_1px)] [background-size:30px_30px]" />
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {/* Top Left Main Glow */}
+        <div className="absolute -top-32 -left-32 w-[700px] h-[700px] bg-[#dff5df] rounded-full blur-[180px] opacity-80" />
+
+        {/* Secondary Highlight */}
+        <div className="absolute top-[10%] left-[20%] w-[400px] h-[400px] bg-[#ffffff] rounded-full blur-[140px] opacity-40" />
+
+        {/* Bottom Right Ambient Glow */}
+        <div className="absolute -bottom-24 -right-24 w-[500px] h-[500px] bg-[#cde8cd] rounded-full blur-[160px] opacity-50" />
+
+        {/* Center Soft Light */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] bg-white rounded-full blur-[120px] opacity-20" />
       </div>
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
