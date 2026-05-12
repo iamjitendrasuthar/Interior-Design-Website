@@ -71,17 +71,17 @@ export default function Portfolio() {
                   variants={fadeInUp}
                   className="group cursor-pointer"
                 >
-                  <div className="rounded-3xl overflow-hidden h-64 mb-6 relative">
+                  <div className="rounded-3xl overflow-hidden relative mb-6 aspect-[4/3] md:h-64">
                     <img
                       src={project.img}
                       alt={project.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                     />
+                    {/* Arrow Icon */}
                     <div className="absolute top-4 right-4 w-10 h-10 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                       <ArrowUpRight size={20} className="text-[#132A13]" />
                     </div>
                   </div>
-
                   <div className="flex items-center gap-4 text-sm text-gray-500 mb-3">
                     <span className="bg-gray-200 px-3 py-1 rounded-full text-[#132A13] font-medium">
                       {project.tag}
@@ -97,7 +97,6 @@ export default function Portfolio() {
                       </span>
                     )}
                   </div>
-
                   <h3 className="text-xl font-semibold text-[#132A13] group-hover:text-gray-600 transition-colors">
                     {project.title}
                   </h3>

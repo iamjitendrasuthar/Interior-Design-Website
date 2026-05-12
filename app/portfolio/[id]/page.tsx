@@ -298,11 +298,11 @@ export default function ProjectDetail({ params }) {
               animate={{ opacity: 1, scale: 1 }}
               src={project.gallery[activeIndex]}
               style={{
-                maxWidth: "85vw",
-                maxHeight: "85vh",
-                width: "85vw",
-                height: "85vw",
-                objectFit: "cover",
+                maxWidth: "95vw",
+                maxHeight: "80vh",
+                width: "auto",
+                height: "auto",
+                objectFit: "contain",
                 borderRadius: 16,
               }}
               onClick={(e) => e.stopPropagation()}

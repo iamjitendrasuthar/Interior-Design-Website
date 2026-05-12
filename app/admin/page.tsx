@@ -1,7 +1,6 @@
 "use client";
-import { useState, useEffect, useCallback } from "react";
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { initializeApp, getApps, getApp } from "firebase/app";
 import {
   getFirestore,
   collection,
@@ -15,7 +14,8 @@ import {
   orderBy,
 } from "firebase/firestore";
 import LogoutButton from "@/components/Logoutbutton";
-import { ArrowLeft, Plus } from "lucide-react";
+import { ArrowLeft, Plus, Upload, Link, X } from "lucide-react";
+import toast from "react-hot-toast";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAdMJCDCe_PrMzhfttNkhoraS0QMsbRHL4",
@@ -28,8 +28,10 @@ const firebaseConfig = {
   measurementId: "G-90TXRMB3ZH",
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+const CLOUDINARY_CLOUD = "dgcibi5co";
+const CLOUDINARY_PRESET = "InteriorDesign";
+
+const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 const db = getFirestore(app);
 
 const CATEGORIES = [
@@ -93,6 +95,441 @@ function TagBadge({ tag }) {
   );
 }
 
+// ═══════════════════════════════════════════════════════════════
+// IMAGE PICKER (URL + Upload — no crop)
+// ═══════════════════════════════════════════════════════════════
+function ImagePicker({ value, onChange, label = "Image" }) {
+  const [tab, setTab] = useState("url");
+  const [urlInput, setUrlInput] = useState(value || "");
+  const [uploading, setUploading] = useState(false);
+  const fileRef = useRef(null);
+
+  useEffect(() => {
+    if (tab === "url") setUrlInput(value || "");
+  }, [value]);
+
+  const uploadToCloudinary = async (file) => {
+    setUploading(true);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      fd.append("upload_preset", CLOUDINARY_PRESET);
+      const res = await fetch(
+        `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`,
+        { method: "POST", body: fd },
+      );
+      const data = await res.json();
+      if (data.secure_url) {
+        onChange(data.secure_url);
+        toast.success("Image uploaded successfully ✅");
+      } else {
+        const localUrl = URL.createObjectURL(file);
+        onChange(localUrl);
+        toast.success("Uploaded (local fallback) ✅");
+      }
+    } catch {
+      const localUrl = URL.createObjectURL(file);
+      onChange(localUrl);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const onFileChange = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    uploadToCloudinary(file);
+    e.target.value = "";
+  };
+
+  const s = {
+    label: {
+      display: "block",
+      fontSize: 12,
+      fontWeight: 600,
+      color: "#555",
+      marginBottom: 6,
+      textTransform: "uppercase",
+      letterSpacing: "0.06em",
+    },
+    input: {
+      width: "100%",
+      border: "1.5px solid #e0e0e0",
+      borderRadius: 10,
+      padding: "10px 14px",
+      fontSize: 14,
+      outline: "none",
+      boxSizing: "border-box",
+      fontFamily: "inherit",
+      background: "#fff",
+    },
+    tab: (active) => ({
+      padding: "7px 16px",
+      fontSize: 12,
+      fontWeight: 700,
+      borderRadius: 8,
+      border: "none",
+      cursor: "pointer",
+      background: active ? "#132A13" : "#f0f0f0",
+      color: active ? "#fff" : "#555",
+      transition: "all 0.2s",
+    }),
+  };
+
+  return (
+    <div style={{ marginBottom: 4 }}>
+      <label style={s.label}>{label}</label>
+      <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
+        <button
+          type="button"
+          style={s.tab(tab === "url")}
+          onClick={() => setTab("url")}
+        >
+          <Link size={11} style={{ display: "inline", marginRight: 4 }} />
+          URL
+        </button>
+        <button
+          type="button"
+          style={s.tab(tab === "upload")}
+          onClick={() => setTab("upload")}
+        >
+          <Upload size={11} style={{ display: "inline", marginRight: 4 }} />
+          Upload
+        </button>
+      </div>
+
+      {tab === "url" && (
+        <input
+          style={s.input}
+          placeholder="https://images.unsplash.com/..."
+          value={urlInput}
+          onChange={(e) => {
+            setUrlInput(e.target.value);
+            onChange(e.target.value);
+          }}
+        />
+      )}
+
+      {tab === "upload" && (
+        <div>
+          <input
+            ref={fileRef}
+            type="file"
+            accept="image/*"
+            style={{ display: "none" }}
+            onChange={onFileChange}
+          />
+          <button
+            type="button"
+            onClick={() => fileRef.current?.click()}
+            disabled={uploading}
+            style={{
+              width: "100%",
+              border: "2px dashed #c8e6c9",
+              borderRadius: 12,
+              padding: "24px 16px",
+              background: "#f9fdf9",
+              cursor: uploading ? "not-allowed" : "pointer",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: 8,
+              color: "#4F772D",
+              fontWeight: 600,
+              fontSize: 13,
+            }}
+          >
+            {uploading ? (
+              <>
+                <div
+                  style={{
+                    width: 28,
+                    height: 28,
+                    border: "3px solid #e0e0e0",
+                    borderTopColor: "#4F772D",
+                    borderRadius: "50%",
+                    animation: "spin 0.8s linear infinite",
+                  }}
+                />
+                <span>Uploading...</span>
+              </>
+            ) : (
+              <>
+                <Upload size={28} />
+                <span>Click to choose image</span>
+                <span style={{ fontSize: 11, color: "#aaa", fontWeight: 400 }}>
+                  JPG, PNG, WEBP — full image uploaded as-is
+                </span>
+              </>
+            )}
+          </button>
+        </div>
+      )}
+
+      {value && (
+        <div
+          style={{
+            marginTop: 10,
+            position: "relative",
+            display: "inline-block",
+            width: "100%",
+          }}
+        >
+          <img
+            src={value}
+            alt=""
+            style={{
+              width: "100%",
+              height: 140,
+              objectFit: "cover",
+              borderRadius: 10,
+              display: "block",
+            }}
+            onError={(e) => {
+              e.target.src =
+                "https://placehold.co/400x140/e8f5e9/1b5e20?text=Invalid+URL";
+            }}
+          />
+          <button
+            type="button"
+            title="Remove image"
+            onClick={() => {
+              onChange("");
+              setUrlInput("");
+            }}
+            style={{
+              position: "absolute",
+              top: 8,
+              right: 8,
+              background: "#c62828",
+              color: "#fff",
+              border: "none",
+              borderRadius: 8,
+              padding: "5px 10px",
+              fontSize: 11,
+              fontWeight: 700,
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              gap: 4,
+            }}
+          >
+            <X size={12} /> Remove
+          </button>
+        </div>
+      )}
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════
+// GALLERY PICKER (no crop)
+// ═══════════════════════════════════════════════════════════════
+function GalleryPicker({ gallery, onChange }) {
+  const [urlInput, setUrlInput] = useState("");
+  const [uploading, setUploading] = useState(false);
+  const fileRef = useRef(null);
+
+  const uploadToCloudinary = async (file) => {
+    const fd = new FormData();
+    fd.append("file", file);
+    fd.append("upload_preset", CLOUDINARY_PRESET);
+    try {
+      const res = await fetch(
+        `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`,
+        { method: "POST", body: fd },
+      );
+      const data = await res.json();
+      return data.secure_url || URL.createObjectURL(file);
+    } catch {
+      return URL.createObjectURL(file);
+    }
+  };
+
+  const onFileChange = async (e) => {
+    const files = Array.from(e.target.files || []);
+    if (!files.length) return;
+    setUploading(true);
+    try {
+      const urls = await Promise.all(files.map((f) => uploadToCloudinary(f)));
+      onChange([...gallery, ...urls]);
+      toast.success(`${urls.length} image(s) uploaded ✅`);
+    } finally {
+      setUploading(false);
+    }
+    e.target.value = "";
+  };
+
+  const addUrl = () => {
+    const v = urlInput.trim();
+    if (v && !gallery.includes(v)) {
+      onChange([...gallery, v]);
+      setUrlInput("");
+    }
+  };
+
+  const s = {
+    label: {
+      display: "block",
+      fontSize: 12,
+      fontWeight: 600,
+      color: "#555",
+      marginBottom: 6,
+      textTransform: "uppercase",
+      letterSpacing: "0.06em",
+    },
+    input: {
+      width: "100%",
+      border: "1.5px solid #e0e0e0",
+      borderRadius: 10,
+      padding: "10px 14px",
+      fontSize: 14,
+      outline: "none",
+      boxSizing: "border-box",
+      fontFamily: "inherit",
+      background: "#fff",
+    },
+    btn: (bg = "#132A13", color = "#fff") => ({
+      background: bg,
+      color,
+      border: "none",
+      borderRadius: 10,
+      padding: "9px 20px",
+      fontSize: 13,
+      fontWeight: 600,
+      cursor: "pointer",
+      display: "inline-flex",
+      alignItems: "center",
+      gap: 6,
+    }),
+  };
+
+  return (
+    <div style={{ marginBottom: 28 }}>
+      <label style={s.label}>Gallery Images</label>
+
+      {/* URL row */}
+      <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
+        <input
+          style={{ ...s.input, flex: 1 }}
+          placeholder="Paste image URL and click Add…"
+          value={urlInput}
+          onChange={(e) => setUrlInput(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addUrl())}
+        />
+        <button type="button" style={s.btn()} onClick={addUrl}>
+          + Add URL
+        </button>
+      </div>
+
+      {/* Upload row */}
+      <div style={{ marginBottom: 14 }}>
+        <input
+          ref={fileRef}
+          type="file"
+          accept="image/*"
+          multiple
+          style={{ display: "none" }}
+          onChange={onFileChange}
+        />
+        <button
+          type="button"
+          onClick={() => fileRef.current?.click()}
+          disabled={uploading}
+          style={{
+            border: "2px dashed #c8e6c9",
+            borderRadius: 10,
+            padding: "10px 16px",
+            background: "#f9fdf9",
+            cursor: uploading ? "not-allowed" : "pointer",
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            color: "#4F772D",
+            fontWeight: 600,
+            fontSize: 12,
+            width: "100%",
+          }}
+        >
+          {uploading ? (
+            <>
+              <div
+                style={{
+                  width: 16,
+                  height: 16,
+                  border: "2px solid #e0e0e0",
+                  borderTopColor: "#4F772D",
+                  borderRadius: "50%",
+                  animation: "spin 0.8s linear infinite",
+                }}
+              />
+              Uploading...
+            </>
+          ) : (
+            <>
+              <Upload size={16} />
+              Upload photos (multi-select — full images, no crop)
+            </>
+          )}
+        </button>
+      </div>
+
+      {/* Thumbnails */}
+      {gallery.length > 0 && (
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(120px, 1fr))",
+            gap: 8,
+          }}
+        >
+          {gallery.map((g, i) => (
+            <div key={i} style={{ position: "relative" }}>
+              <img
+                src={g}
+                alt=""
+                style={{
+                  width: "100%",
+                  height: 80,
+                  objectFit: "cover",
+                  borderRadius: 8,
+                  display: "block",
+                }}
+              />
+              <button
+                type="button"
+                onClick={() => onChange(gallery.filter((_, j) => j !== i))}
+                style={{
+                  position: "absolute",
+                  top: 4,
+                  right: 4,
+                  background: "#c62828",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: "50%",
+                  width: 20,
+                  height: 20,
+                  fontSize: 11,
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                ×
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════
+// MAIN APP
+// ═══════════════════════════════════════════════════════════════
 export default function App() {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -103,11 +540,11 @@ export default function App() {
   const [editId, setEditId] = useState(null);
   const [deleteId, setDeleteId] = useState(null);
   const [previewProject, setPreviewProject] = useState(null);
-  const [toast, setToast] = useState(null);
+  const [toastMsg, setToastMsg] = useState(null);
 
   const showToast = (msg, type = "success") => {
-    setToast({ msg, type });
-    setTimeout(() => setToast(null), 3000);
+    setToastMsg({ msg, type });
+    setTimeout(() => setToastMsg(null), 3000);
   };
 
   const fetchProjects = useCallback(async () => {
@@ -121,10 +558,7 @@ export default function App() {
       const snap = await getDocs(q);
       setProjects(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
     } catch (e) {
-      setError(
-        "Failed to fetch data from Firebase. Please check your configuration. " +
-          e.message,
-      );
+      setError("Failed to fetch data from Firebase. " + e.message);
     } finally {
       setLoading(false);
     }
@@ -181,7 +615,7 @@ export default function App() {
     setSaving(true);
     try {
       await deleteDoc(doc(db, "portfolio", deleteId));
-      showToast("Project delete ho gaya");
+      showToast("Project deleted");
       setDeleteId(null);
       fetchProjects();
     } catch (e) {
@@ -199,20 +633,12 @@ export default function App() {
 
   const addFeature = () => {
     const v = form.featureInput.trim();
-    if (v && !form.features.includes(v)) {
+    if (v && !form.features.includes(v))
       setForm((f) => ({
         ...f,
         features: [...f.features, v],
         featureInput: "",
       }));
-    }
-  };
-
-  const addGallery = () => {
-    const v = form.galleryInput.trim();
-    if (v && !form.gallery.includes(v)) {
-      setForm((f) => ({ ...f, gallery: [...f.gallery, v], galleryInput: "" }));
-    }
   };
 
   const s = {
@@ -221,21 +647,6 @@ export default function App() {
       minHeight: "100vh",
       background: "#f7f6f3",
       paddingBottom: 80,
-    },
-    header: {
-      background: "#132A13",
-      padding: "0 32px",
-      height: 60,
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "space-between",
-    },
-    logo: {
-      color: "#fff",
-      fontWeight: 700,
-      fontSize: 16,
-      letterSpacing: "0.08em",
-      textTransform: "uppercase",
     },
     btn: (bg = "#132A13", color = "#fff") => ({
       background: bg,
@@ -322,19 +733,14 @@ export default function App() {
 
       <header className="fixed top-0 left-0 right-0 z-50 bg-[#132A13]/90 backdrop-blur-md border-b border-white/10 px-6 py-4">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
-          {/* Left Side: Logo & Status */}
           <div className="flex items-center gap-4">
             <div className="w-10 h-10 bg-[#4F772D] rounded-xl flex items-center justify-center shadow-lg shadow-[#4F772D]/20">
               <span className="text-xl">🌿</span>
             </div>
-            <div>
-              <span className="text-[#4F772D] text-[14px] uppercase tracking-widest font-bold">
-                Admin Console
-              </span>
-            </div>
+            <span className="text-[#4F772D] text-[14px] uppercase tracking-widest font-bold">
+              Admin Console
+            </span>
           </div>
-
-          {/* Right Side: Actions */}
           <div className="flex items-center gap-3">
             {view !== "list" && (
               <button
@@ -345,15 +751,11 @@ export default function App() {
                 }}
                 className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-black/70 hover:text-black hover:bg-white/10 rounded-xl transition-all border border-white/5"
               >
-                <ArrowLeft size={16} />
-                Back to List
+                <ArrowLeft size={16} /> Back to List
               </button>
             )}
-
-            {/* Logout Component */}
             <div className="h-8 w-px bg-white/10 mx-2 hidden md:block" />
             <LogoutButton />
-
             {view === "list" && (
               <button
                 onClick={() => {
@@ -371,14 +773,15 @@ export default function App() {
         </div>
       </header>
 
-      {toast && (
+      {/* Toast */}
+      {toastMsg && (
         <div
           style={{
             position: "fixed",
             bottom: 28,
             right: 28,
             zIndex: 9999,
-            background: toast.type === "error" ? "#c62828" : "#1b5e20",
+            background: toastMsg.type === "error" ? "#c62828" : "#1b5e20",
             color: "#fff",
             borderRadius: 12,
             padding: "12px 22px",
@@ -386,10 +789,11 @@ export default function App() {
             fontWeight: 500,
           }}
         >
-          {toast.msg}
+          {toastMsg.msg}
         </div>
       )}
 
+      {/* Delete modal */}
       {deleteId && (
         <div
           style={{
@@ -417,8 +821,7 @@ export default function App() {
               Delete Project?
             </h3>
             <p style={{ color: "#777", fontSize: 14, margin: "0 0 24px" }}>
-              This action is permanent and will also remove the data from
-              Firebase.
+              This action is permanent and will remove data from Firebase.
             </p>
             <div style={{ display: "flex", gap: 12, justifyContent: "center" }}>
               <button style={s.outBtn} onClick={() => setDeleteId(null)}>
@@ -436,6 +839,7 @@ export default function App() {
         </div>
       )}
 
+      {/* Preview modal */}
       {previewProject && (
         <div
           style={{
@@ -555,6 +959,7 @@ export default function App() {
         </div>
       )}
 
+      {/* LIST VIEW */}
       {view === "list" && (
         <>
           <div
@@ -580,14 +985,13 @@ export default function App() {
               <p style={{ margin: "4px 0 0", color: "#888", fontSize: 14 }}>
                 {loading
                   ? "Loading..."
-                  : `${projects.length} projects are saved in Firebase`}{" "}
+                  : `${projects.length} projects saved in Firebase`}
               </p>
             </div>
             <button style={s.btn("#f0f0f0", "#555")} onClick={fetchProjects}>
               ↻ Refresh
             </button>
           </div>
-
           {error && (
             <div
               style={{
@@ -603,7 +1007,6 @@ export default function App() {
               ⚠️ {error}
             </div>
           )}
-
           {loading ? (
             <div
               style={{
@@ -619,7 +1022,7 @@ export default function App() {
             <div style={{ textAlign: "center", padding: 80 }}>
               <div style={{ fontSize: 48, marginBottom: 12 }}>🏠</div>
               <p style={{ color: "#aaa", fontSize: 16, marginBottom: 20 }}>
-                No project found. Add your first project!
+                No projects found. Add your first!
               </p>
               <button style={s.btn()} onClick={() => setView("form")}>
                 + Add Project
@@ -710,11 +1113,12 @@ export default function App() {
         </>
       )}
 
+      {/* FORM VIEW */}
       {view === "form" && (
         <div style={{ padding: "0 16px", paddingTop: 70 }}>
           <div style={s.formCard}>
             <h2 style={{ margin: "0 0 24px", color: "#132A13", fontSize: 22 }}>
-              {editId ? "✏️ Edit Project" : "➕ Add New Project"}{" "}
+              {editId ? "✏️ Edit Project" : "➕ Add New Project"}
             </h2>
 
             <div
@@ -772,35 +1176,20 @@ export default function App() {
                   }
                 />
               </div>
+
               <div style={{ gridColumn: "1 / -1" }}>
-                <label style={s.label}>Hero Image URL *</label>
-                <input
-                  style={s.input}
-                  placeholder="https://images.unsplash.com/..."
+                <ImagePicker
+                  label="Hero Image *"
                   value={form.img}
-                  onChange={(e) =>
-                    setForm((f) => ({ ...f, img: e.target.value }))
-                  }
+                  onChange={(url) => setForm((f) => ({ ...f, img: url }))}
                 />
-                {form.img && (
-                  <img
-                    src={form.img}
-                    alt=""
-                    style={{
-                      marginTop: 8,
-                      width: "100%",
-                      height: 140,
-                      objectFit: "cover",
-                      borderRadius: 10,
-                    }}
-                  />
-                )}
               </div>
+
               <div style={{ gridColumn: "1 / -1" }}>
                 <label style={s.label}>Project Overview</label>
                 <textarea
                   style={{ ...s.input, height: 90, resize: "vertical" }}
-                  placeholder="Project ke baare mein likho..."
+                  placeholder="Describe the project..."
                   value={form.overview}
                   onChange={(e) =>
                     setForm((f) => ({ ...f, overview: e.target.value }))
@@ -809,6 +1198,7 @@ export default function App() {
               </div>
             </div>
 
+            {/* Features */}
             <div style={{ marginBottom: 20 }}>
               <label style={s.label}>Features / What We Did</label>
               <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
@@ -852,70 +1242,10 @@ export default function App() {
               </div>
             </div>
 
-            <div style={{ marginBottom: 28 }}>
-              <label style={s.label}>Gallery Image URLs</label>
-              <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
-                <input
-                  style={{ ...s.input, flex: 1 }}
-                  placeholder="https://..."
-                  value={form.galleryInput}
-                  onChange={(e) =>
-                    setForm((f) => ({ ...f, galleryInput: e.target.value }))
-                  }
-                  onKeyDown={(e) =>
-                    e.key === "Enter" && (e.preventDefault(), addGallery())
-                  }
-                />
-                <button style={s.btn()} onClick={addGallery}>
-                  + Add
-                </button>
-              </div>
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fill, minmax(120px, 1fr))",
-                  gap: 8,
-                }}
-              >
-                {form.gallery.map((g, i) => (
-                  <div key={i} style={{ position: "relative" }}>
-                    <img
-                      src={g}
-                      alt=""
-                      style={{
-                        width: "100%",
-                        height: 80,
-                        objectFit: "cover",
-                        borderRadius: 8,
-                      }}
-                    />
-                    <button
-                      onClick={() =>
-                        setForm((f) => ({
-                          ...f,
-                          gallery: f.gallery.filter((_, j) => j !== i),
-                        }))
-                      }
-                      style={{
-                        position: "absolute",
-                        top: 4,
-                        right: 4,
-                        background: "#c62828",
-                        color: "#fff",
-                        border: "none",
-                        borderRadius: "50%",
-                        width: 20,
-                        height: 20,
-                        fontSize: 11,
-                        cursor: "pointer",
-                      }}
-                    >
-                      ×
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <GalleryPicker
+              gallery={form.gallery}
+              onChange={(gallery) => setForm((f) => ({ ...f, gallery }))}
+            />
 
             <div style={{ display: "flex", gap: 12 }}>
               <button
