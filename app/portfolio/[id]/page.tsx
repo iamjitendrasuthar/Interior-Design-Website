@@ -118,7 +118,36 @@ export default function ProjectDetail({ params }) {
     };
     fetchProject();
   }, [resolvedParams.id]);
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (activeIndex === null) return;
 
+      // CLOSE
+      if (e.key === "Escape") {
+        setActiveIndex(null);
+      }
+
+      // NEXT
+      if (e.key === "ArrowRight") {
+        setActiveIndex((prev) =>
+          prev === project.gallery.length - 1 ? 0 : prev + 1,
+        );
+      }
+
+      // PREV
+      if (e.key === "ArrowLeft") {
+        setActiveIndex((prev) =>
+          prev === 0 ? project.gallery.length - 1 : prev - 1,
+        );
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [activeIndex, project]);
   if (loading) return <ProjectSkeleton />;
 
   if (error || !project)
@@ -331,62 +360,54 @@ export default function ProjectDetail({ params }) {
             </motion.button>
 
             {/* PREV */}
-            <motion.button
-              whileHover={{ scale: 1.08, x: -2 }}
-              whileTap={{ scale: 0.92 }}
-              style={{
-                position: "fixed",
-                left: 24,
-                top: "50%",
-                transform: "translateY(-50%)",
-                zIndex: 10000,
-              }}
-              className="group flex items-center justify-center w-14 h-14 rounded-2xl
-  bg-gradient-to-br from-white/15 to-white/5
-  hover:from-white/25 hover:to-white/10
-  border border-white/20 hover:border-white/40
-  backdrop-blur-xl
-  shadow-[0_10px_40px_rgba(0,0,0,0.35)]
-  text-white transition-all duration-300"
-              onClick={(e) => {
-                e.stopPropagation();
-                handlePrev(e);
-              }}
-            >
-              <ChevronLeft
-                size={30}
-                className="transition-transform duration-300 group-hover:-translate-x-1"
-              />
-            </motion.button>
+            <div className="fixed left-4 md:left-6 top-1/2 -translate-y-1/2 z-[10000]">
+              <motion.button
+                whileHover={{ scale: 1.08 }}
+                whileTap={{ scale: 0.92 }}
+                className="group flex items-center justify-center
+    w-11 h-11 md:w-14 md:h-14 rounded-2xl
+    bg-gradient-to-br from-white/15 to-white/5
+    hover:from-white/25 hover:to-white/10
+    border border-white/20 hover:border-white/40
+    backdrop-blur-xl
+    shadow-[0_10px_40px_rgba(0,0,0,0.35)]
+    text-white transition-all duration-300"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handlePrev(e);
+                }}
+              >
+                <ChevronLeft
+                  size={26}
+                  className="transition-transform duration-300 group-hover:-translate-x-1"
+                />
+              </motion.button>
+            </div>
 
             {/* NEXT */}
-            <motion.button
-              whileHover={{ scale: 1.08, x: 2 }}
-              whileTap={{ scale: 0.92 }}
-              style={{
-                position: "fixed",
-                right: 24,
-                top: "50%",
-                transform: "translateY(-50%)",
-                zIndex: 10000,
-              }}
-              className="group flex items-center justify-center w-14 h-14 rounded-2xl
-  bg-gradient-to-br from-white/15 to-white/5
-  hover:from-white/25 hover:to-white/10
-  border border-white/20 hover:border-white/40
-  backdrop-blur-xl
-  shadow-[0_10px_40px_rgba(0,0,0,0.35)]
-  text-white transition-all duration-300"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleNext(e);
-              }}
-            >
-              <ChevronRight
-                size={30}
-                className="transition-transform duration-300 group-hover:translate-x-1"
-              />
-            </motion.button>
+            <div className="fixed right-4 md:right-6 top-1/2 -translate-y-1/2 z-[10000]">
+              <motion.button
+                whileHover={{ scale: 1.08 }}
+                whileTap={{ scale: 0.92 }}
+                className="group flex items-center justify-center
+    w-11 h-11 md:w-14 md:h-14 rounded-2xl
+    bg-gradient-to-br from-white/15 to-white/5
+    hover:from-white/25 hover:to-white/10
+    border border-white/20 hover:border-white/40
+    backdrop-blur-xl
+    shadow-[0_10px_40px_rgba(0,0,0,0.35)]
+    text-white transition-all duration-300"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleNext(e);
+                }}
+              >
+                <ChevronRight
+                  size={26}
+                  className="transition-transform duration-300 group-hover:translate-x-1"
+                />
+              </motion.button>
+            </div>
 
             {/* Counter */}
             <div
