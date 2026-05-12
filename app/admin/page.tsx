@@ -30,7 +30,7 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app); // ← YE LINE ADD KARO
+const db = getFirestore(app);
 
 const CATEGORIES = [
   "Residential",
@@ -328,10 +328,7 @@ export default function App() {
               <span className="text-xl">🌿</span>
             </div>
             <div>
-              <h1 className="text-white font-bold tracking-tight leading-none">
-                Portfolio
-              </h1>
-              <span className="text-[#4F772D] text-[10px] uppercase tracking-widest font-bold">
+              <span className="text-[#4F772D] text-[14px] uppercase tracking-widest font-bold">
                 Admin Console
               </span>
             </div>
